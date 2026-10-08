@@ -1,0 +1,70 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  6. The inner product matters   (~12 min)
+% ============================================================
+\section{The Inner Product Matters}
+
+\begin{frame}{Derivative vs.\ gradient}
+  \begin{itemize}
+    \item $f'(u) \in U^*$ is a linear functional. The \alert{gradient} is its Riesz representative:
+      \[
+        \ip{\nabla f(u)}{h}_U = f'(u)h \qquad \forall h \in U .
+      \]
+    \item The gradient \emph{depends on the inner product}: $L^2$, $H^1$, weighted, \dots
+    \item Steepest descent direction $= -\nabla f(u)$: changing the inner product changes the method.
+  \end{itemize}
+  \vspace{1ex}
+  \textbf{Example:} in $H^1$, $\nabla_{H^1} f = g$ solves $-\Delta g + g = \nabla_{L^2} f$ (with Neumann BCs): a smoothed $L^2$ gradient.
+\end{frame}
+
+\begin{frame}{The discrete picture}
+  Finite elements: $u_h = \sum_{i=1}^m u_i\varphi_i$, \; mass matrix $M_{ij} = \ip{\varphi_i}{\varphi_j}_{L^2}$.
+  \begin{itemize}
+    \item Discrete objective $f_h: \R^m \to \R$, derivative vector $d_i = \partial f_h/\partial u_i = f'(u_h)\varphi_i$.
+    \item Euclidean gradient: $\nabla_{\R^m} f_h = d$.
+    \item $L^2$ gradient: $\ip{g}{v}_M = d^\top v$ \; $\Rightarrow$ \; $g = M^{-1}d$.
+  \end{itemize}
+  \vspace{1ex}
+  \begin{alertblock}{Consequence}
+    $M \sim h^{d}$ on quasi-uniform meshes, so $d = Mg \sim h^{d}g$: the Euclidean gradient is a \emph{mesh-dependent rescaling} of the function-space gradient.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Mesh dependence of Euclidean steepest descent}
+  \begin{itemize}
+    \item Euclidean step: $u - s\,d = u - s\,M g$, i.e.\ the $L^2$ method \emph{preconditioned by $M$}.
+    \item Uniform meshes: $M \approx h^d I$, so a good step size must scale like $h^{-d}$.
+    \item Nonuniform/adaptive meshes: $\mathrm{cond}(M) \sim (h_{\max}/h_{\min})^d$, and no single step size works: iteration counts grow under refinement.
+    \item The $M$-gradient method is the discretization of the $L^2$ method: iteration counts stay bounded.
+  \end{itemize}
+  \vspace{1ex}
+  \todo{Insert table: iterations vs.\ $h$ for Euclidean vs.\ $L^2$ gradient (generated later)}
+\end{frame}
+
+\begin{frame}{The mesh independence principle}
+  \begin{theorem}[informal; Allgower, B\"ohmer, Potra, Rheinboldt (1986)]
+    If Newton's method converges for the infinite-dimensional problem and the discretizations are consistent, then for $h$ small enough the number of iterations to reach a tolerance $\varepsilon$ differs by at most one from the infinite-dimensional count.
+  \end{theorem}
+  \begin{itemize}
+    \item Requires an algorithm that is \emph{well-defined in function space}.
+    \item Design principle: \alert{formulate the method in $U$, then discretize}, including inner products, norms in stopping criteria, and projections.
+    \item Extensions to semismooth Newton / active-set methods: Hinterm\"uller--Ulbrich (2004).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Projections must also be consistent}
+  \begin{itemize}
+    \item $\Proj$ is the projection in $U$: $\Proj(v) = \argmin_{w \in \Uad}\norm{w - v}_U$.
+    \item In $L^2$ with box constraints: pointwise projection $\max(u_a,\min(u_b,v))$.
+    \item Discretely, the $M$-projection onto a box is \emph{not} componentwise unless $M$ is diagonal.
+    \item Practical remedies:
+      \begin{itemize}
+        \item lumped mass matrix $M_L = \mathrm{diag}(M\mathbf{1})$: componentwise projection, still consistent;
+        \item piecewise constant controls ($M$ diagonal);
+        \item variational discretization (Hinze 2005): control not discretized at all.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\end{document}

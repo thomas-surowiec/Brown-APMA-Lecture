@@ -1,0 +1,152 @@
+% !TEX root = main.tex
+% ============================================================
+%  1. Motivating Examples   (~12 min)
+% ============================================================
+\section{Motivating Examples}
+
+% ------------------------------------------------------------
+\subsection{An elliptic model problem}
+\begin{frame}{Example 1: A Simple Inverse Problem}
+  \framesubtitle{See, e.g., Lions (1971), Tr\"oltzsch (2010)}
+  \visible<2->{
+  \begin{qbox}
+   Given the measured temperature $u_d$ in a room $D$. Reproduce the heat source $z$.
+  \end{qbox}
+  }  
+
+  \visible<3->{
+  \begin{hlbox}
+   For simplicity, assume the stationary temperature $u$ in $D$ solves
+     \[\aligned
+    -\Delta u &= z \;\;\text{in } D,\qquad
+            u = 0 \;\;\text{on } \partial D,
+    \endaligned
+  \]
+  It is reasonable to assume that $z$ is not arbitrarily large or small. Take $z \in Z_{\rm ad}$ with
+  \[
+    Z_{\rm ad} := \{ u \in \Ltwo : z_a \le z \le z_b \text{ a.e.\ in } D \}.
+  \]
+  \end{hlbox}
+  }  
+
+  \visible<4->{
+  \begin{hlbox}
+  Find $z \in Z_{\rm ad}$ such that $u$ is close to $u_d$. An objective function could be:
+        \[
+    J(u,z) := \frac12 \norm{u - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2
+  \]
+  \end{hlbox}
+  }
+\end{frame}
+
+\begin{frame}{Example 2: Catalyst Placement in a Chemical Reactor}
+  \framesubtitle{See, e.g., Tr\"oltzsch (2010), Ch.~4; Casas--Tr\"oltzsch (quasilinear case)}
+  \visible<2->{
+  \begin{qbox}
+   A catalyst density $z$ controls how fast a diffusing reactant $u$ is consumed in a reactor $D$. Where to place $z$ so that $u \approx u_d$.
+  \end{qbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+   The stationary concentration $u$ solves the reaction--diffusion equation
+   \[
+     -\nabla\cdot\big(\kappa(u)\nabla u\big) + z\,R(u) = f \;\;\text{in } \Omega,\qquad
+     u = 0 \;\;\text{on } \partial\Omega,
+   \]
+   feed $f$, diffusivity $\kappa(u) \ge \kappa_0 > 0$, nondecreasing rate law, e.g., $R(u) = \frac{u}{1+u}$ or $u^3$.
+  \end{hlbox}
+  }
+
+  \visible<4->{
+  \begin{hlbox}
+  Catalyst bounds and the same objective:
+  \[
+    Z_{\rm ad} := \{ 0 \le z_a \le z \le z_b \text{ a.e.} \}, \qquad
+    J(u,z) := \tfrac12 \norm{u - u_d}_{\Ltwo}^2 + \tfrac{\alpha}{2}\norm{z}_{\Ltwo}^2 .
+  \]
+  \end{hlbox}
+  }
+
+  % \visible<5->{
+  % \begin{qbox}
+  % \textbf{What changes?} $z \mapsto u$ is \emph{nonlinear} $\Rightarrow$ the problem is \emph{nonconvex}.
+  % \end{qbox}
+  % }
+\end{frame}
+
+\begin{frame}{What is PDE-constrained optimization?}
+  \[
+    \min_{y,\,u}\; J(y,u)
+    \quad\text{s.t.}\quad
+    e(y,u) = 0 \;\;(\text{PDE}),\qquad u \in \Uad .
+  \]
+  \begin{itemize}
+    \item $u$: \emph{control / design / parameter} \quad (what we choose)
+    \item $y$: \emph{state} \quad (determined by $u$ through the PDE)
+    \item $J$: objective \quad (tracking, cost, risk, \dots)
+    \item $\Uad$: admissible controls \quad (bounds, physical limits)
+  \end{itemize}
+  \vspace{1ex}
+  \todo{Optional: one slide with application pictures (heating, flow control, shape design, inverse problems)}
+\end{frame}
+
+
+
+% ------------------------------------------------------------
+\subsection{A time-dependent problem}
+\begin{frame}{Example 2: Optimal control of the heat equation}
+  \[
+    \min_{y,u}\; \frac12 \norm{y - y_Q}_{L^2(Q)}^2 + \frac{\beta}{2}\norm{y(T) - y_T}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{u}_{L^2(Q)}^2
+  \]
+  subject to, with $Q := \Omega \times (0,T)$,
+  \[
+    \partial_t y - \Delta y = u \;\;\text{in } Q, \qquad y = 0 \;\;\text{on } \partial\Omega\times(0,T), \qquad y(0) = y_0,
+  \]
+  \[
+    u_a \le u \le u_b \;\;\text{a.e.\ in } Q.
+  \]
+  \begin{itemize}
+    \item State space $\WT = \{ y \in L^2(0,T;\Hzero) : \partial_t y \in L^2(0,T;H^{-1}(\Omega)) \}$.
+    \item Preview: the adjoint equation runs \alert{backward in time}.
+  \end{itemize}
+  \todo{Insert from your .tex file}
+\end{frame}
+
+% ------------------------------------------------------------
+\subsection{A problem under uncertainty}
+\begin{frame}{Example 3: Optimization under uncertainty}
+  Random diffusivity $\kappa(x,\omega)$, $\omega \in (\Xi,\mathcal{F},\mathbb{P})$:
+  \[
+    -\nabla\cdot\big(\kappa(\cdot,\omega)\nabla y(\omega)\big) = u \;\;\text{in } \Omega, \qquad y(\omega) = 0 \;\;\text{on } \partial\Omega, \quad \text{a.s.}
+  \]
+  \[
+    \min_{u \in \Uad}\; \mathcal{R}\Big[\tfrac12 \norm{y(\omega) - y_d}_{\Ltwo}^2\Big] + \frac{\alpha}{2}\norm{u}_{\Ltwo}^2
+  \]
+  \begin{itemize}
+    \item $u$ deterministic, $y = y(\omega)$ random.
+    \item $\mathcal{R}$: risk measure, e.g.\ $\E$, mean $+$ variance, $\mathrm{CVaR}_\beta$.
+    \item Same workflow: well-posedness (a.s., uniform ellipticity), existence, adjoint \emph{per realization}.
+  \end{itemize}
+  \todo{Insert from your .tex file; reference e.g.\ Kouri--Shapiro}
+\end{frame}
+
+\begin{frame}{Common structure}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}llll@{}}
+    \toprule
+    & Elliptic & Parabolic & Uncertain \\
+    \midrule
+    State space $Y$ & $\Hzero$ & $\WT$ & $L^2_{\mathbb{P}}(\Xi;\Hzero)$ \\
+    Control space $U$ & $\Ltwo$ & $L^2(Q)$ & $\Ltwo$ \\
+    Solution map & linear & linear (affine) & linear for each $\omega$ \\
+    Adjoint & elliptic & backward parabolic & one per sample \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{1ex}
+  \begin{block}{Guiding question}
+    How do we go from a model to a computable optimality system---and then to algorithms?
+  \end{block}
+\end{frame}

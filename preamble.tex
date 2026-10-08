@@ -1,0 +1,78 @@
+% ============================================================
+%  Preamble: theme, packages, macros
+%  Replace/merge with your own macro file as needed.
+% ============================================================
+\usetheme{default}
+\usecolortheme{default}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{theorems}[numbered]
+
+\definecolor{brownred}{RGB}{78,54,41}
+\definecolor{accent}{RGB}{192,57,43}
+\definecolor{muted}{RGB}{110,110,110}
+\setbeamercolor{frametitle}{fg=brownred}
+\setbeamercolor{title}{fg=brownred}
+\setbeamercolor{part title}{fg=brownred}
+\setbeamercolor{structure}{fg=brownred}
+\setbeamercolor{block title}{bg=brownred!12,fg=brownred}
+\setbeamercolor{block body}{bg=brownred!4}
+\setbeamercolor{block title alerted}{bg=accent!15,fg=accent}
+\setbeamercolor{block body alerted}{bg=accent!4}
+
+\usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+% \usepackage{lmodern}  % uncomment if installed
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\usepackage[ruled,linesnumbered,noend]{algorithm2e}
+\SetAlFnt{\small}
+
+% ---------- placeholders ----------
+\newcommand{\todo}[1]{{\color{accent}\textbf{[TODO:} #1\textbf{]}}}
+
+% ---------- sets & spaces ----------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Uad}{U_{\mathrm{ad}}}
+\newcommand{\Hone}{H^1(D)}
+\newcommand{\Hzero}{H^1_0(D)}
+\newcommand{\Ltwo}{L^2(D)}
+\newcommand{\WT}{W(0,T)}
+
+% ---------- operators ----------
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\Proj}{P_{\Uad}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\Lag}{\mathcal{L}}
+\newcommand{\ip}[2]{\left( #1, #2 \right)}
+\newcommand{\dual}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\weakto}{\rightharpoonup}
+
+% ---------- optimal quantities ----------
+\newcommand{\ub}{\bar u}
+\newcommand{\yb}{\bar y}
+\newcommand{\pb}{\bar p}
+
+% ---------- untitled highlight boxes ----------
+\usepackage[most]{tcolorbox}
+% plain highlighted box with soft shadow
+\newtcolorbox{hlbox}[1][]{enhanced, colback=brownred!6, colframe=brownred!6,
+  boxrule=0pt, arc=2mm, left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+  drop fuzzy shadow=black!40, #1}
+% question box: accent tint, red bar on the left, sharp left corners
+\newtcolorbox{qbox}[1][]{enhanced, colback=accent!8, colframe=accent!8,
+  boxrule=0pt, arc=2mm, sharp corners=west, left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+  borderline west={2pt}{0pt}{accent}, drop fuzzy shadow=black!40, #1}
+
+% ---------- compile individual section files ----------
+% Each section file starts with \documentclass[main.tex]{subfiles}
+\usepackage{subfiles}

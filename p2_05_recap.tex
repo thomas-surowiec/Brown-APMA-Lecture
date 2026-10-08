@@ -1,0 +1,31 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  5. Recap and bridge   (~3 min)
+% ============================================================
+\section{Recap: What We Can Compute}
+
+\begin{frame}{Recap: the reduced problem and its oracle}
+  \[
+    \min_{u \in \Uad}\; f(u), \qquad \Uad = \{ u \in U : u_a \le u \le u_b \}.
+  \]
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Quantity & How & Cost (PDE solves) \\
+    \midrule
+    $f(u)$ & state solve & 1 (nonlinear) \\
+    $\nabla f(u)$ & $+$ adjoint solve & $+1$ (linear) \\
+    $\nabla^2 f(u)h$ & linearized $+$ second adjoint & $+2$ (linear) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{1ex}
+  \begin{block}{Optimality}
+    $\ub = \Proj\big(\ub - s\nabla f(\ub)\big)$ for some (all) $s > 0$.
+  \end{block}
+  This fixed-point characterization drives everything in Part II.
+\end{frame}
+
+\end{document}

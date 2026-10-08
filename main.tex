@@ -1,0 +1,57 @@
+% ============================================================
+%  Introduction to PDE-Constrained Optimization
+%  Special Lecture, Brown University
+%  Compile: latexmk -pdf main.tex
+% ============================================================
+\documentclass[11pt,aspectratio=169]{beamer}
+\input{preamble}
+
+\title{An Introduction to PDE-Constrained Optimization}
+\subtitle{Theory and Solution Algorithm}
+\author{Thomas M. Surowiec}
+\institute{Simula Research Laboratory\\Department of Numerical Analysis and Scientific Computing\\Oslo, Norway\\\bigskip Guest Lecture, Brown University}
+\date{October 14 , 2026}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}{Today's Agenda}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Part I: Theory}\\[1ex]
+      {\small\tableofcontents[part=1,hideallsubsections]}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Part II: Algorithms}\\[1ex]
+      {\small\tableofcontents[part=2,hideallsubsections]}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------- PART I --------------------------
+\part{Theory}
+\begin{frame}[plain]\partpage\end{frame}
+
+\subfile{p1_01_examples}
+\subfile{p1_02_workflow}
+\subfile{p1_03_abstract}
+\subfile{p1_04_adjoints}
+
+% ------------------------- PART II -------------------------
+\part{Algorithms}
+\begin{frame}[plain]\partpage\end{frame}
+
+\subfile{p2_05_recap}
+\subfile{p2_06_innerproduct}
+\subfile{p2_07_projgrad}
+\subfile{p2_08_linesearch}
+\subfile{p2_09_projnewton}
+\subfile{p2_10_numerics}
+\subfile{p2_11_outlook}
+
+\subfile{references}
+
+\end{document}

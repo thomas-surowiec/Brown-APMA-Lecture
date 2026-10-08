@@ -1,0 +1,58 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  10. Computational realization and numerics   (~7 min)
+% ============================================================
+\section{Computational Realization}
+
+\begin{frame}{Cost per iteration}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    & Projected gradient & Projected Newton \\
+    \midrule
+    State solve & 1 & 1 \\
+    Adjoint solve & 1 & 1 \\
+    Hessian-vector products & -- & $2 \times$ \#CG \\
+    Line search (state solves) & \#backtracks & \#backtracks (often 0) \\
+    Outer iterations & many, linear rate & few, superlinear \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Verifying derivatives: the Taylor test}
+  For random $u$, $h$ and $t \to 0$:
+  \begin{align*}
+    \abs{f(u + th) - f(u) - t\,f'(u)h} &= O(t^2),\\
+    \abs{f(u + th) - f(u) - t\,f'(u)h - \tfrac{t^2}{2} f''(u)[h,h]} &= O(t^3).
+  \end{align*}
+  \begin{itemize}
+    \item Plot errors vs.\ $t$ on a log--log scale: slopes 2 and 3.
+    \item Detects sign errors, wrong boundary/terminal conditions, inconsistent discrete adjoints.
+  \end{itemize}
+  \todo{Insert Taylor test plot}
+\end{frame}
+
+\begin{frame}{Numerical example: model problem}
+  \todo{Setup: $\Omega = (0,1)^2$, $y_d$, $\alpha$, bounds}
+  \vspace{1ex}
+  \begin{center}
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{@{}rccc@{}}
+    \toprule
+    $h$ & PG (Euclidean) & PG ($L^2$) & Projected Newton \\
+    \midrule
+    $2^{-4}$ & -- & -- & -- \\
+    $2^{-5}$ & -- & -- & -- \\
+    $2^{-6}$ & -- & -- & -- \\
+    $2^{-7}$ & -- & -- & -- \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vspace{1ex}
+  \todo{Fill in iteration counts; optional plots of $\ub$, $\yb$, active sets}
+\end{frame}
+
+\end{document}

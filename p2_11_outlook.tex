@@ -1,0 +1,31 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  11. Outlook and summary   (~3 min)
+% ============================================================
+\section{Outlook and Summary}
+
+\begin{frame}{Back to uncertainty}
+  For $f(u) = \E\big[\tfrac12\norm{y(\omega) - y_d}^2\big] + \tfrac\alpha2\norm{u}^2$:
+  \[
+    \nabla f(u) = \alpha u + \E[p(\omega)], \qquad -\nabla\cdot(\kappa(\omega)\nabla p(\omega)) = y(\omega) - y_d .
+  \]
+  \begin{itemize}
+    \item Sample average approximation: $N$ state $+$ $N$ adjoint solves per gradient.
+    \item Everything from Part II carries over: $L^2$ gradients, projections, projected Newton.
+    \item Risk-averse measures ($\mathrm{CVaR}$) are nonsmooth: smoothing or nonsmooth methods.
+  \end{itemize}
+  \vspace{0.5ex}
+  \textbf{Further directions:} state constraints, sparsity ($L^1$) costs, shape optimization, inverse problems.
+\end{frame}
+
+\begin{frame}{Take-home messages}
+  \begin{enumerate}
+    \item \textbf{Workflow:} well-posedness $\to$ reduced problem $\to$ existence $\to$ VI $\to$ adjoint.
+    \item \textbf{Adjoints} make gradients cost one extra (linear) PDE solve, and Hessian-vector products two.
+    \item \textbf{Inner products matter:} gradients and projections must be formulated in function space to get mesh independence.
+    \item \textbf{Projected gradient} with an Armijo search along the projection arc is robust; \textbf{projected Newton} adds fast local convergence at matrix-free cost.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

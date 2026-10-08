@@ -1,0 +1,78 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  9. Projected Newton   (~13 min)
+% ============================================================
+\section{Projected Newton Methods}
+
+\begin{frame}{Why not Newton plus projection?}
+  \begin{itemize}
+    \item Projected gradient: robust, but linear convergence.
+    \item Naive idea: $u_{k+1} = \Proj\big(u_k - s\,\nabla^2 f(u_k)^{-1}\nabla f(u_k)\big)$.
+    \item \alert{Fails}: the projected Newton direction need not be a descent direction, even for convex quadratics.
+  \end{itemize}
+  \todo{TikZ picture: 2D box, elliptic level sets, projected Newton step increasing $f$}
+  \vspace{1ex}
+  Fix (Bertsekas 1982): treat \emph{nearly active} variables with the gradient, the rest with Newton.
+\end{frame}
+
+\begin{frame}{$\varepsilon$-active sets}
+  For $u \in \Uad$ with $g = \nabla f(u)$, set $\varepsilon_k := \min\{\varepsilon,\, \norm{u - \Proj(u - g)}\}$ and
+  \[
+    \mathcal{A}_k := \{ x : u(x) \le u_a(x) + \varepsilon_k,\; g(x) > 0 \}
+    \;\cup\;
+    \{ x : u(x) \ge u_b(x) - \varepsilon_k,\; g(x) < 0 \},
+  \]
+  \[
+    \mathcal{I}_k := \Omega \setminus \mathcal{A}_k .
+  \]
+  Reduced Hessian (with $\chi_{\mathcal{A}}, \chi_{\mathcal{I}}$ characteristic functions):
+  \[
+    H_R := \chi_{\mathcal{I}}\,\nabla^2 f(u)\,\chi_{\mathcal{I}} + \chi_{\mathcal{A}} .
+  \]
+  \begin{itemize}
+    \item Newton on the inactive set, identity (gradient step) on the active set.
+    \item $\varepsilon_k \to 0$ near a solution: correct identification under strict complementarity.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The projected Newton iteration}
+  \begin{algorithm}[H]
+    \caption{Projected Newton method (Bertsekas 1982)}
+    \For{$k = 0,1,2,\dots$}{
+      Compute $g_k = \nabla f(u_k)$ (state + adjoint); stop if stationary\;
+      Determine $\mathcal{A}_k$, $\mathcal{I}_k$\;
+      Solve $H_R\, d_k = g_k$ (inexactly, by CG on $\mathcal{I}_k$)\;
+      Find $s_k = \beta^{m}$ satisfying
+      \[
+        f(u_k) - f(u_k(s)) \ge \sigma\Big( s\ip{g_k}{\chi_{\mathcal{I}} d_k} + \ip{g_k}{\chi_{\mathcal{A}}(u_k - u_k(s))}\Big)
+      \]
+      with $u_k(s) = \Proj(u_k - s\,d_k)$\;
+      $u_{k+1} = u_k(s_k)$\;
+    }
+  \end{algorithm}
+\end{frame}
+
+\begin{frame}{Matrix-free realization via adjoints}
+  Solve $\chi_{\mathcal{I}}\nabla^2 f(u)\chi_{\mathcal{I}}\, d_{\mathcal{I}} = \chi_{\mathcal{I}}\, g$ by CG; on $\mathcal{A}$: $d_{\mathcal{A}} = g_{\mathcal{A}}$.
+  \begin{itemize}
+    \item Each CG step: one Hessian-vector product $\nabla^2 f(u)(\chi_{\mathcal{I}}v)$, i.e.\ \alert{linearized state $+$ second adjoint} (2 linear PDE solves).
+    \item CG must run in the $L^2$ ($M$-) inner product: preconditioner $M^{-1}$, or equivalently CG on $M^{-1}H$.
+    \item For the model problem, $\nabla^2 f = \alpha I + S^*S$ = identity $+$ compact: CG converges superlinearly, \emph{mesh-independently}.
+    \item Inexact Newton: stop CG at relative residual $\eta_k \to 0$ (Eisenstat--Walker type forcing terms); negative curvature $\Rightarrow$ truncate (Steihaug).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Convergence and connections}
+  \begin{theorem}[informal; Bertsekas (1982), Kelley (1999)]
+    Accumulation points are stationary. Under second-order sufficiency and strict complementarity, the active set is identified in finitely many steps and convergence is (locally) quadratic; superlinear with inexact solves.
+  \end{theorem}
+  \begin{itemize}
+    \item Function-space analysis: Kelley--Sachs; mesh independence requires the $L^2$-consistent formulation.
+    \item Close relatives: primal--dual active set strategy $\equiv$ semismooth Newton for $u = \Proj(-p/\alpha)$ (Hinterm\"uller--Ito--Kunisch 2002).
+    \item Without strict complementarity, semismooth Newton is the natural generalization.
+  \end{itemize}
+  \todo{Confirm which convergence statements you want to state precisely}
+\end{frame}
+
+\end{document}

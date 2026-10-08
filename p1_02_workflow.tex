@@ -1,0 +1,133 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  2. Workflow on the model problem   (~18 min)
+% ============================================================
+\section{The Workflow on the Model Problem}
+
+\begin{frame}{The workflow}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.45cm and 0.45cm,
+      box/.style={draw=brownred, fill=brownred!8, rounded corners, minimum height=1.0cm, text width=2.0cm, align=center, font=\small},
+      arr/.style={-{Stealth[length=2.5mm]}, thick, brownred}]
+    \node[box] (a) {State eq.\\ well-posed};
+    \node[box, right=of a] (b) {Reduced\\ problem};
+    \node[box, right=of b] (c) {Existence\\ (direct method)};
+    \node[box, right=of c] (d) {Variational\\ inequality};
+    \node[box, right=of d] (e) {Adjoint \&\\ KKT system};
+    \draw[arr] (a) -- (b); \draw[arr] (b) -- (c); \draw[arr] (c) -- (d); \draw[arr] (d) -- (e);
+  \end{tikzpicture}
+  \end{center}
+  \vspace{1ex}
+  We carry this out on Example 1, then repeat it abstractly.
+\end{frame}
+
+\begin{frame}{Step 1: The state equation}
+  Weak form: find $y \in \Hzero$ with
+  \[
+    a(y,v) := \int_\Omega \nabla y\cdot\nabla v \dd x = \int_\Omega u\, v \dd x \qquad \forall v \in \Hzero .
+  \]
+  \begin{theorem}
+    For every $u \in \Ltwo$ there is a unique $y \in \Hzero$ (Lax--Milgram), and
+    $\norm{y}_{\Hone} \le c\,\norm{u}_{\Ltwo}$.
+  \end{theorem}
+  \begin{itemize}
+    \item Solution operator $S: \Ltwo \to \Hzero$, \; $u \mapsto y$, is linear and bounded.
+    \item By Rellich, $S: \Ltwo \to \Ltwo$ is \alert{compact}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Step 2: The reduced problem}
+  Eliminate the state $y = Su$:
+  \[
+    \min_{u \in \Uad}\; f(u) := \frac12 \norm{Su - y_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{u}_{\Ltwo}^2 .
+  \]
+  \begin{itemize}
+    \item $\Uad$ nonempty, convex, closed, and bounded in $\Ltwo$.
+    \item $f$ is convex and continuous; strictly convex if $\alpha > 0$.
+    \item Optimization is now over $u$ only, but every evaluation of $f$ requires a PDE solve.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Step 3: Existence via the direct method}
+  \begin{theorem}
+    The reduced problem has a solution $\ub \in \Uad$; it is unique if $\alpha > 0$.
+  \end{theorem}
+  \textbf{Proof sketch.}
+  \begin{enumerate}
+    \item $j := \inf_{\Uad} f \ge 0$; take a minimizing sequence $(u_n) \subset \Uad$, $f(u_n) \to j$.
+    \item $\Uad$ bounded $\Rightarrow$ subsequence $u_n \weakto \ub$ in $\Ltwo$.
+    \item $\Uad$ convex and closed $\Rightarrow$ weakly closed (Mazur) $\Rightarrow$ $\ub \in \Uad$.
+    \item $f$ convex and continuous $\Rightarrow$ weakly l.s.c.\ $\Rightarrow$ $f(\ub) \le \liminf f(u_n) = j$.
+  \end{enumerate}
+  \vspace{0.5ex}
+  {\small Alternatively: $S$ compact gives $Su_n \to S\ub$ strongly. This is the route that survives nonlinearity.}
+\end{frame}
+
+\begin{frame}{Step 4: First-order necessary conditions}
+  \begin{theorem}[Variational inequality]
+    Let $f$ be G\^ateaux differentiable and $\Uad$ convex. If $\ub$ is a (local) minimizer, then
+    \[
+      f'(\ub)(u - \ub) \ge 0 \qquad \forall u \in \Uad .
+    \]
+    If $f$ is convex, this is also sufficient.
+  \end{theorem}
+  For the model problem:
+  \[
+    f'(u)h = \ip{Su - y_d}{Sh} + \alpha\ip{u}{h} = \ip{S^*(Su - y_d) + \alpha u}{h} .
+  \]
+  \begin{alertblock}{Question}
+    How do we evaluate $S^*$ without forming it?
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Step 5: The adjoint equation}
+  Define the adjoint state $p := S^*(\yb - y_d)$. Since $-\Delta$ is self-adjoint with homogeneous Dirichlet BCs:
+  \[
+    -\Delta p = \yb - y_d \;\;\text{in } \Omega, \qquad p = 0 \;\;\text{on } \partial\Omega .
+  \]
+  \textbf{Verification:} for $h \in \Ltwo$, $z := Sh$,
+  \[
+    \ip{\yb - y_d}{z} = a(z,p) = \ip{h}{p} .
+  \]
+  Hence $\nabla f(\ub) = \pb + \alpha \ub$ and the VI reads
+  \[
+    \ip{\pb + \alpha\ub}{u - \ub} \ge 0 \qquad \forall u \in \Uad .
+  \]
+\end{frame}
+
+\begin{frame}{Step 6: Consequences of the VI}
+  \textbf{Pointwise form.} The VI holds iff for a.e.\ $x \in \Omega$:
+  \[
+    \big(\pb(x) + \alpha\ub(x)\big)\big(v - \ub(x)\big) \ge 0 \qquad \forall v \in [u_a(x),u_b(x)] .
+  \]
+  \textbf{Projection formula} ($\alpha > 0$):
+  \[
+    \ub(x) = P_{[u_a(x),u_b(x)]}\Big(-\tfrac{1}{\alpha}\pb(x)\Big) .
+  \]
+  \textbf{KKT form.} With $\mu_a := (\pb + \alpha\ub)^+$, $\mu_b := (\pb + \alpha\ub)^-$:
+  \[
+    \pb + \alpha\ub - \mu_a + \mu_b = 0, \qquad \mu_a,\mu_b \ge 0, \qquad
+    \mu_a(\ub - u_a) = \mu_b(u_b - \ub) = 0 .
+  \]
+  \todo{Optional: regularity bootstrapping remark ($\ub \in H^1$ if $u_a,u_b$ smooth)}
+\end{frame}
+
+\begin{frame}{The optimality system}
+  \begin{block}{$(\yb,\ub,\pb)$ is optimal iff}
+    \[
+      \begin{array}{rcll}
+        -\Delta \yb &=& \ub \;\text{in }\Omega, \quad \yb|_{\partial\Omega} = 0 & \qquad\text{(state)}\\[0.5ex]
+        -\Delta \pb &=& \yb - y_d \;\text{in }\Omega, \quad \pb|_{\partial\Omega} = 0 & \qquad\text{(adjoint)}\\[0.5ex]
+        \ub &=& P_{[u_a,u_b]}\big(-\tfrac{1}{\alpha}\pb\big) & \qquad\text{(optimality)}
+      \end{array}
+    \]
+  \end{block}
+  \textbf{Formal Lagrange recipe:}
+  \[
+    \Lag(y,u,p) = J(y,u) - a(y,p) + \ip{u}{p}
+  \]
+  $\partial_p\Lag = 0$: state; \quad $\partial_y\Lag = 0$: adjoint; \quad $\partial_u\Lag(u - \ub) \ge 0$: VI.
+\end{frame}
+
+\end{document}

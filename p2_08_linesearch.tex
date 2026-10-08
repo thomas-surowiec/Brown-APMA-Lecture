@@ -1,0 +1,50 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  8. Globalization: line search along the projection arc   (~10 min)
+% ============================================================
+\section{Line Search Along the Projection Arc}\label{sec:linesearch}
+
+\begin{frame}{The projection arc}
+  \[
+    u(s) := \Proj\big(u - s\nabla f(u)\big), \qquad s \ge 0 .
+  \]
+  \begin{itemize}
+    \item Searching along a \emph{fixed} direction $d$ with $u + sd \in \Uad$ forces tiny steps near the boundary.
+    \item The arc $s \mapsto u(s)$ bends along the boundary of $\Uad$: \alert{many constraints can become active in one step}.
+    \item Key property: $\ip{\nabla f(u)}{u - u(s)} \ge \tfrac1s\norm{u - u(s)}^2$.
+  \end{itemize}
+  \todo{TikZ picture: box, iterate, straight ray vs.\ bent projection arc}
+\end{frame}
+
+\begin{frame}{Armijo rule along the arc}
+  \framesubtitle{Goldstein (1964), Levitin--Polyak (1966), Bertsekas (1976)}
+  Given $\sigma \in (0,1)$, $\beta \in (0,1)$, $\bar s > 0$: choose $s_k = \beta^{m_k}\bar s$ with $m_k$ the smallest integer such that
+  \[
+    f(u_k) - f\big(u_k(s_k)\big) \;\ge\; \sigma\,\ip{\nabla f(u_k)}{u_k - u_k(s_k)}_U .
+  \]
+  Variant (e.g.\ Kelley 1999):
+  \[
+    f\big(u_k(s_k)\big) - f(u_k) \;\le\; -\frac{\sigma}{s_k}\norm{u_k - u_k(s_k)}_U^2 .
+  \]
+  \begin{itemize}
+    \item Each backtracking step costs one projection and one state solve, \emph{no} new adjoint.
+    \item Both conditions are stated in the $U$ inner product: consistent across meshes.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Convergence theory}
+  \begin{theorem}[Bertsekas (1976); Dunn (1981) in Hilbert space]
+    Let $\nabla f$ be Lipschitz on $\Uad$. Then the Armijo step is well defined, and every accumulation point of the projected gradient iterates is stationary.
+  \end{theorem}
+  \textbf{Dunn's contributions}
+  \begin{itemize}
+    \item Global convergence and rate estimates for projected gradient processes in Hilbert space.
+    \item Role of nondegeneracy/growth conditions at $\ub$ for linear rates.
+    \item \alert{Active set identification}: under strict complementarity the active set is identified after finitely many steps (finite dim.) \todo{state precisely the function-space version you want to use}.
+  \end{itemize}
+  \vspace{0.5ex}
+  This motivates: once the active set is known, switch to Newton on the free part.
+\end{frame}
+
+\end{document}

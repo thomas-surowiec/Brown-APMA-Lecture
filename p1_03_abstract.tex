@@ -1,0 +1,107 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  3. Abstract setting   (~15 min)
+% ============================================================
+\section{The Abstract Setting}
+
+\begin{frame}{Abstract problem}
+  Banach spaces $Y$ (state), $U$ (control, Hilbert), $Z$ (residual):
+  \[
+    \min_{(y,u) \in Y\times U}\; J(y,u) \quad\text{s.t.}\quad e(y,u) = 0 \;\text{in } Z, \quad u \in \Uad .
+  \]
+  \textbf{Standing assumptions}
+  \begin{enumerate}
+    \item[(A1)] $\Uad \subset U$ nonempty, convex, closed.
+    \item[(A2)] $J: Y\times U \to \R$ and $e: Y\times U \to Z$ are continuously Fr\'echet differentiable.
+    \item[(A3)] For each $u$ there is a unique $y = S(u)$ with $e(S(u),u) = 0$.
+    \item[(A4)] $e_y(y,u) \in \mathcal{L}(Y,Z)$ has a bounded inverse at $y = S(u)$.
+  \end{enumerate}
+  \vspace{0.5ex}
+  Example 1: $e(y,u) = -\Delta y - u$, \; $Y = \Hzero$, \; $Z = H^{-1}(\Omega)$.
+\end{frame}
+
+\begin{frame}{The implicit function theorem}
+  \begin{theorem}
+    Under (A2)--(A4), the control-to-state map $S: U \to Y$ is continuously Fr\'echet differentiable, and $\delta y = S'(u)h$ solves the \alert{linearized state equation}
+    \[
+      e_y(y,u)\,\delta y = -e_u(y,u)\,h, \qquad y = S(u).
+    \]
+  \end{theorem}
+  \textbf{Implications}
+  \begin{itemize}
+    \item The reduced functional $f(u) := J(S(u),u)$ is $C^1$ (and $C^2$ if $J,e$ are).
+    \item The problem becomes $\min_{u \in \Uad} f(u)$: a smooth, constrained problem in $U$.
+    \item Without convexity of $f$: \emph{local} solutions only; uniqueness is lost.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Existence in the abstract setting}
+  \begin{theorem}
+    Assume in addition
+    \begin{itemize}
+      \item $\Uad$ bounded (or $f$ coercive on $\Uad$),
+      \item $S$ is weak-to-strong continuous: $u_n \weakto u$ in $U$ $\Rightarrow$ $S(u_n) \to S(u)$ in $Y$ (or in a space where $J$ is continuous),
+      \item $J$ is continuous in $y$ and convex, l.s.c.\ in $u$.
+    \end{itemize}
+    Then $\min_{\Uad} f$ has at least one solution.
+  \end{theorem}
+  \begin{itemize}
+    \item Proof: identical to the direct method, with compactness replacing linearity.
+    \item Typical source of weak-to-strong continuity: a priori bounds plus compact embeddings.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{First-order conditions and the adjoint}
+  Chain rule: $f'(u)h = J_y(y,u)\,S'(u)h + J_u(y,u)\,h$. Using the linearized equation,
+  \[
+    J_y\,S'(u)h = -\dual{J_y}{e_y^{-1} e_u h} = -\dual{e_y^{-*} J_y}{e_u h} .
+  \]
+  \begin{block}{Adjoint equation and gradient}
+    Let $p \in Z^*$ solve
+    \[
+      e_y(y,u)^*\, p = J_y(y,u) .
+    \]
+    Then
+    \[
+      f'(u) = J_u(y,u) - e_u(y,u)^*\, p .
+    \]
+  \end{block}
+  \begin{theorem}
+    If $\ub$ is a local solution, then $f'(\ub)(u - \ub) \ge 0$ for all $u \in \Uad$.
+  \end{theorem}
+\end{frame}
+
+\begin{frame}{The Lagrangian viewpoint}
+  \[
+    \Lag(y,u,p) := J(y,u) - \dual{p}{e(y,u)}_{Z^*,Z}
+  \]
+  \begin{block}{Optimality system}
+    \vspace{-1ex}
+    \begin{align*}
+      \Lag_p(\yb,\ub,\pb) &= 0 &&\Longleftrightarrow\quad e(\yb,\ub) = 0 && \text{(state)}\\
+      \Lag_y(\yb,\ub,\pb) &= 0 &&\Longleftrightarrow\quad e_y^*\pb = J_y && \text{(adjoint)}\\
+      \Lag_u(\yb,\ub,\pb)(u - \ub) &\ge 0 &&\Longleftrightarrow\quad f'(\ub)(u-\ub) \ge 0 && \text{(VI)}
+    \end{align*}
+  \end{block}
+  \begin{itemize}
+    \item $f(u) = \Lag(S(u),u,p)$ for \emph{any} $p$; the choice $p = p(u)$ kills the $S'(u)$ term.
+    \item Sign convention for $p$ is a choice; ours matches Section 2 ($e_u = -I \Rightarrow \nabla f = \alpha u + p$).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Example: a semilinear state equation}
+  \[
+    -\Delta y + y^3 = u \;\;\text{in } \Omega, \qquad y = 0 \;\;\text{on } \partial\Omega, \qquad \Omega \subset \R^d,\; d \le 3 .
+  \]
+  \begin{itemize}
+    \item $e(y,u) = -\Delta y + y^3 - u$, \; $e: \Hzero\times\Ltwo \to H^{-1}(\Omega)$ is $C^1$ (since $\Hzero \hookrightarrow L^6$).
+    \item (A3): monotone operator theory (Minty--Browder).
+    \item (A4): $e_y(y,u)\delta y = -\Delta\delta y + 3y^2\delta y$ is coercive $\Rightarrow$ invertible.
+    \item Adjoint: $-\Delta p + 3y^2 p = y - y_d$, \;$p|_{\partial\Omega} = 0$.
+    \item $f$ is \alert{nonconvex}: existence by compactness, conditions are only necessary.
+  \end{itemize}
+  \todo{Decide whether to keep this example or move it to an exercise}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,96 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  4. Adjoint calculus: first and second order   (~13 min)
+% ============================================================
+\section{Adjoint Calculus}
+
+\begin{frame}{Sensitivities vs.\ adjoints}
+  Goal: compute $f'(u)$ where $u \in \R^m$ after discretization ($m$ large).
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Sensitivity approach}
+        For each direction $h_i$:\\
+        solve $e_y\,\delta y_i = -e_u h_i$,\\
+        then $f'(u)h_i = J_y\delta y_i + J_u h_i$.\\[0.5ex]
+        \textbf{Cost:} $m$ linearized solves.
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Adjoint approach}
+        Solve once: $e_y^* p = J_y$,\\
+        then $f'(u) = J_u - e_u^* p$.\\[2.6ex]
+        \textbf{Cost:} 1 adjoint solve, independent of $m$.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{1ex}
+  Sensitivities pay off only for few controls, or many outputs (constraints).
+\end{frame}
+
+\begin{frame}{Recipe: reduced gradient}
+  \begin{algorithm}[H]
+    \caption{Evaluate $f(u)$ and $\nabla f(u)$}
+    \KwIn{control $u$}
+    Solve the state equation $e(y,u) = 0$ for $y$\;
+    Evaluate $f(u) = J(y,u)$\;
+    Solve the adjoint equation $e_y(y,u)^* p = J_y(y,u)$ for $p$\;
+    Set $f'(u) = J_u(y,u) - e_u(y,u)^* p$\;
+    Compute the Riesz representative $\nabla f(u)$ in $U$ \tcp*{see Part II!}
+  \end{algorithm}
+  \vspace{1ex}
+  \textbf{Model problem:} solve $-\Delta y = u$, solve $-\Delta p = y - y_d$, then $\nabla f(u) = \alpha u + p$.
+\end{frame}
+
+\begin{frame}{Second derivatives}
+  With $p = p(u)$ the adjoint state, and $w(h) := (S'(u)h,\, h)$:
+  \[
+    f''(u)[h_1,h_2] = \Lag_{(y,u)(y,u)}(y,u,p)\big[w(h_1),\, w(h_2)\big] .
+  \]
+  \begin{itemize}
+    \item Second derivatives of $e$ enter only through $\dual{p}{e''(y,u)[\cdot,\cdot]}$.
+    \item Forming $\nabla^2 f(u)$ is prohibitive (dense, $m\times m$).
+    \item Krylov/Newton methods only need \alert{Hessian-vector products} $\nabla^2 f(u)h$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Recipe: Hessian-vector product}
+  \begin{algorithm}[H]
+    \caption{Evaluate $f''(u)h$ (given $y = S(u)$, $p = p(u)$)}
+    Solve the linearized state equation: $e_y\,\delta y = -e_u\,h$\;
+    Solve the second adjoint equation: $e_y^*\,\delta p = \Lag_{yy}\,\delta y + \Lag_{yu}\,h$\;
+    Set $f''(u)h = \Lag_{uy}\,\delta y + \Lag_{uu}\,h - e_u^*\,\delta p$\;
+  \end{algorithm}
+  \vspace{1ex}
+  \begin{itemize}
+    \item \textbf{Cost:} 2 linear solves with $e_y$ and $e_y^*$ (reuse factorizations/preconditioners).
+    \item \textbf{Model problem:} $-\Delta\delta y = h$, \; $-\Delta\delta p = \delta y$, \; $f''(u)h = \alpha h + \delta p$, \; i.e.\ $f'' = S^*S + \alpha I$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Second-order sufficient conditions (remark)}
+  \begin{itemize}
+    \item Convex case (Example 1): first-order conditions are sufficient.
+    \item Nonconvex case: need $f''(\ub)[h,h] \ge \delta\norm{h}^2$ on a \emph{critical cone}
+      \[
+        C(\ub) = \{ h : h \ge 0 \text{ where } \ub = u_a,\; h \le 0 \text{ where } \ub = u_b,\; h = 0 \text{ where } \nabla f(\ub) \ne 0 \}.
+      \]
+    \item Subtlety: \alert{two-norm discrepancy} (differentiability in $L^\infty$, coercivity in $L^2$).
+  \end{itemize}
+  \todo{Keep brief or drop depending on time}
+\end{frame}
+
+\begin{frame}{Adjoints for the time-dependent problem}
+  Example 2: the adjoint runs backward in time,
+  \[
+    -\partial_t p - \Delta p = y - y_Q \;\;\text{in } Q, \qquad p = 0 \;\;\text{on } \partial\Omega\times(0,T), \qquad p(T) = \beta\big(y(T) - y_T\big).
+  \]
+  \begin{itemize}
+    \item $\nabla f(u) = \alpha u + p$ in $L^2(Q)$.
+    \item Adjoint needs the \emph{whole} forward trajectory $y(t)$: storage or checkpointing.
+    \item Optimize-then-discretize vs.\ discretize-then-optimize: do the discrete adjoint and the discretized adjoint agree? (time stepping matters)
+  \end{itemize}
+  \todo{Optional: commuting diagram slide}
+\end{frame}
+
+\end{document}

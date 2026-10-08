@@ -1,0 +1,49 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  7. Projected gradient   (~12 min)
+% ============================================================
+\section{Projected Gradient Methods}
+
+\begin{frame}{Stationarity as a fixed point}
+  \begin{lemma}
+    For $\Uad$ closed and convex and any $s > 0$:
+    \[
+      f'(\ub)(u - \ub) \ge 0 \;\;\forall u \in \Uad
+      \quad\Longleftrightarrow\quad
+      \ub = \Proj\big(\ub - s\nabla f(\ub)\big).
+    \]
+  \end{lemma}
+  \begin{itemize}
+    \item Proof: characterization of the projection, $\ip{v - \Proj v}{w - \Proj v} \le 0$ for all $w \in \Uad$.
+    \item Model problem with $s = 1/\alpha$: $\ub = \Proj(\ub - \tfrac1\alpha(\alpha\ub + \pb)) = \Proj(-\tfrac1\alpha\pb)$: the projection formula.
+    \item Natural stationarity measure: $\norm{u - \Proj(u - \nabla f(u))}_U$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{The projected gradient method}
+  \begin{algorithm}[H]
+    \caption{Projected gradient method in $U$}
+    \KwIn{$u_0 \in \Uad$, tolerance $\varepsilon$}
+    \For{$k = 0,1,2,\dots$}{
+      Solve state, adjoint; compute $\nabla f(u_k)$ in the $U$ inner product\;
+      \lIf{$\norm{u_k - \Proj(u_k - \nabla f(u_k))}_U \le \varepsilon$}{stop}
+      Choose $s_k > 0$ by a line search along the projection arc (Section~\ref{sec:linesearch})\;
+      $u_{k+1} = \Proj\big(u_k - s_k\nabla f(u_k)\big)$\;
+    }
+  \end{algorithm}
+\end{frame}
+
+\begin{frame}{Convergence: basic results}
+  \begin{theorem}[fixed step]
+    If $\nabla f$ is $L$-Lipschitz and $f$ is $\mu$-strongly convex on $\Uad$, then for $s \in (0, 2/L)$ the iteration converges linearly to $\ub$ with rate $\max\{|1 - s\mu|, |1 - sL|\}$.
+  \end{theorem}
+  \begin{itemize}
+    \item Model problem: $\mu = \alpha$, $L = \alpha + \norm{S}^2$: rates are \alert{mesh independent} if $\nabla f$ is the $L^2$ gradient.
+    \item With the Euclidean gradient, $L$ and $\mu$ scale differently with $h$.
+    \item Nonconvex case with line search: every accumulation point is stationary (next section).
+  \end{itemize}
+  \todo{Choose: present proof of linear rate, or just state}
+\end{frame}
+
+\end{document}
