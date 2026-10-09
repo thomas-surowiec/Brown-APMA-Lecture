@@ -1,31 +1,84 @@
 \documentclass[main.tex]{subfiles}
 \begin{document}
 % ============================================================
-%  2. Workflow on the model problem   (~18 min)
+%  2. Analysis of a model problem   (~18 min)
 % ============================================================
-\section{The Workflow on the Model Problem}
+\section{Analysis of a Model Problem}
 
-\begin{frame}{The workflow}
+\begin{frame}{Analysis of a Model Problem: Overview}
+  \vspace*{\fill}
   \begin{center}
-  \begin{tikzpicture}[node distance=0.45cm and 0.45cm,
-      box/.style={draw=brownred, fill=brownred!8, rounded corners, minimum height=1.0cm, text width=2.0cm, align=center, font=\small},
-      arr/.style={-{Stealth[length=2.5mm]}, thick, brownred}]
-    \node[box] (a) {State eq.\\ well-posed};
-    \node[box, right=of a] (b) {Reduced\\ problem};
-    \node[box, right=of b] (c) {Existence\\ (direct method)};
-    \node[box, right=of c] (d) {Variational\\ inequality};
-    \node[box, right=of d] (e) {Adjoint \&\\ KKT system};
-    \draw[arr] (a) -- (b); \draw[arr] (b) -- (c); \draw[arr] (c) -- (d); \draw[arr] (d) -- (e);
+  \begin{tikzpicture}[
+      card/.style={rectangle, rounded corners=2mm, fill=brownred!6,
+        minimum width=2.5cm, minimum height=2.1cm, text width=2.3cm,
+        align=center, inner sep=1.5mm,
+        blur shadow={shadow blur steps=6, shadow xshift=0.6mm, shadow yshift=-0.6mm, shadow opacity=25}},
+      num/.style={circle, fill=accent, text=white, font=\scriptsize\bfseries,
+        inner sep=0pt, minimum size=4.2mm},
+      arr/.style={-{Stealth[length=2mm]}, semithick, muted},
+      brc/.style={decorate, decoration={brace, mirror, amplitude=5pt}, thick, brownred!70},
+      lab/.style={font=\small\itshape, text=brownred, align=center}]
+    \foreach \i/\t/\s [count=\k] in {
+        0/{State equation}/{Well-Posed\\(Lax--Milgram)},
+        1/{Reduced problem}/{Eliminate\\$u = S z$},
+        2/{Existence}/{Direct Method},
+        3/{Optimality}/{Variational\\Inequality},
+        4/{Adjoint}/{KKT System}} {
+      \visible<\k->{
+        \node[card] (c\k) at (\i*2.95, 0)
+          {\parbox[c][8mm][c]{2.3cm}{\centering\small\bfseries \t}\\[0.5ex]\parbox[t][8mm][t]{2.3cm}{\centering\footnotesize\color{muted}\s}};
+        \node[num] at (c\k.north west) {\k};
+      }
+    }
+    \foreach \a/\b in {1/2,2/3,3/4,4/5} {
+      \visible<\b->{\draw[arr] (c\a.east) -- (c\b.west);}
+    }
+
+    \visible<6->{
+      \draw[brc] ([yshift=-2mm]c1.south west) -- ([yshift=-2mm]c3.south east)
+        node[midway, below=7pt, lab] {Does an optimal control exist?};
+    }
+    \visible<7->{
+      \draw[brc] ([yshift=-2mm]c4.south west) -- ([yshift=-2mm]c5.south east)
+        node[midway, below=7pt, lab] {How do we characterize it?};
+    }
   \end{tikzpicture}
   \end{center}
-  \vspace{1ex}
-  We carry this out on Example 1, then repeat it abstractly.
+  \vspace*{\fill}
+  \visible<8->{
+  \begin{qbox}
+    We carry this out for Example 1, then repeat it in an abstract setting.
+  \end{qbox}
+  }
+  \vspace*{\fill}
+\end{frame}
+
+\begin{frame}{Return to Example 1}
+  \framesubtitle{See, e.g., Lions (1971), Tr\"oltzsch (2010)}
+  \vspace*{\fill}
+  \begin{hlbox}
+  \[
+    \begin{aligned}
+      &\min_{u,z}\; J(u,z) := \frac12 \norm{u - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2
+        \;\;\text{over } (u,z) \in \Hzero \times Z_{\rm ad}\\[1ex]
+      &\text{subject to}\\[0.5ex]
+      &\qquad\qquad
+      \begin{aligned}
+        -\Delta u &= z \;\;\text{in } D,\\
+               u &= 0 \;\;\text{on } \partial D.
+      \end{aligned}
+    \end{aligned}
+  \]
+  \end{hlbox}
+  \vspace*{\fill}
 \end{frame}
 
 \begin{frame}{Step 1: The state equation}
+
+
   Weak form: find $y \in \Hzero$ with
   \[
-    a(y,v) := \int_\Omega \nabla y\cdot\nabla v \dd x = \int_\Omega u\, v \dd x \qquad \forall v \in \Hzero .
+    a(y,v) := \int_D \nabla y\cdot\nabla v \dd x = \int_D u\, v \dd x \qquad \forall v \in \Hzero .
   \]
   \begin{theorem}
     For every $u \in \Ltwo$ there is a unique $y \in \Hzero$ (Lax--Milgram), and
@@ -84,7 +137,7 @@
 \begin{frame}{Step 5: The adjoint equation}
   Define the adjoint state $p := S^*(\yb - y_d)$. Since $-\Delta$ is self-adjoint with homogeneous Dirichlet BCs:
   \[
-    -\Delta p = \yb - y_d \;\;\text{in } \Omega, \qquad p = 0 \;\;\text{on } \partial\Omega .
+    -\Delta p = \yb - y_d \;\;\text{in } D, \qquad p = 0 \;\;\text{on } \partial D .
   \]
   \textbf{Verification:} for $h \in \Ltwo$, $z := Sh$,
   \[
@@ -97,7 +150,7 @@
 \end{frame}
 
 \begin{frame}{Step 6: Consequences of the VI}
-  \textbf{Pointwise form.} The VI holds iff for a.e.\ $x \in \Omega$:
+  \textbf{Pointwise form.} The VI holds iff for a.e.\ $x \in D$:
   \[
     \big(\pb(x) + \alpha\ub(x)\big)\big(v - \ub(x)\big) \ge 0 \qquad \forall v \in [u_a(x),u_b(x)] .
   \]
@@ -117,8 +170,8 @@
   \begin{block}{$(\yb,\ub,\pb)$ is optimal iff}
     \[
       \begin{array}{rcll}
-        -\Delta \yb &=& \ub \;\text{in }\Omega, \quad \yb|_{\partial\Omega} = 0 & \qquad\text{(state)}\\[0.5ex]
-        -\Delta \pb &=& \yb - y_d \;\text{in }\Omega, \quad \pb|_{\partial\Omega} = 0 & \qquad\text{(adjoint)}\\[0.5ex]
+        -\Delta \yb &=& \ub \;\text{in }D, \quad \yb|_{\partial D} = 0 & \qquad\text{(state)}\\[0.5ex]
+        -\Delta \pb &=& \yb - y_d \;\text{in }D, \quad \pb|_{\partial D} = 0 & \qquad\text{(adjoint)}\\[0.5ex]
         \ub &=& P_{[u_a,u_b]}\big(-\tfrac{1}{\alpha}\pb\big) & \qquad\text{(optimality)}
       \end{array}
     \]

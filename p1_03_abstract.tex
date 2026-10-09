@@ -18,7 +18,7 @@
     \item[(A4)] $e_y(y,u) \in \mathcal{L}(Y,Z)$ has a bounded inverse at $y = S(u)$.
   \end{enumerate}
   \vspace{0.5ex}
-  Example 1: $e(y,u) = -\Delta y - u$, \; $Y = \Hzero$, \; $Z = H^{-1}(\Omega)$.
+  Example 1: $e(y,u) = -\Delta y - u$, \; $Y = \Hzero$, \; $Z = H^{-1}(D)$.
 \end{frame}
 
 \begin{frame}{The implicit function theorem}
@@ -92,13 +92,13 @@
 
 \begin{frame}{Example: a semilinear state equation}
   \[
-    -\Delta y + y^3 = u \;\;\text{in } \Omega, \qquad y = 0 \;\;\text{on } \partial\Omega, \qquad \Omega \subset \R^d,\; d \le 3 .
+    -\Delta y + y^3 = u \;\;\text{in } D, \qquad y = 0 \;\;\text{on } \partial D, \qquad D \subset \R^d,\; d \le 3 .
   \]
   \begin{itemize}
-    \item $e(y,u) = -\Delta y + y^3 - u$, \; $e: \Hzero\times\Ltwo \to H^{-1}(\Omega)$ is $C^1$ (since $\Hzero \hookrightarrow L^6$).
+    \item $e(y,u) = -\Delta y + y^3 - u$, \; $e: \Hzero\times\Ltwo \to H^{-1}(D)$ is $C^1$ (since $\Hzero \hookrightarrow L^6$).
     \item (A3): monotone operator theory (Minty--Browder).
     \item (A4): $e_y(y,u)\delta y = -\Delta\delta y + 3y^2\delta y$ is coercive $\Rightarrow$ invertible.
-    \item Adjoint: $-\Delta p + 3y^2 p = y - y_d$, \;$p|_{\partial\Omega} = 0$.
+    \item Adjoint: $-\Delta p + 3y^2 p = y - y_d$, \;$p|_{\partial D} = 0$.
     \item $f$ is \alert{nonconvex}: existence by compactness, conditions are only necessary.
   \end{itemize}
   \todo{Decide whether to keep this example or move it to an exercise}

@@ -1,4 +1,5 @@
-% !TEX root = main.tex
+\documentclass[main.tex]{subfiles}
+\begin{document}
 % ============================================================
 %  1. Motivating Examples   (~12 min)
 % ============================================================
@@ -24,7 +25,7 @@
   \]
   It is reasonable to assume that $z$ is not arbitrarily large or small. Take $z \in Z_{\rm ad}$ with
   \[
-    Z_{\rm ad} := \{ u \in \Ltwo : z_a \le z \le z_b \text{ a.e.\ in } D \}.
+    Z_{\rm ad} := \{ z \in \Ltwo : z_a \le z \le z_b \text{ a.e.\ in } D \}.
   \]
   \end{hlbox}
   }  
@@ -39,7 +40,39 @@
   }
 \end{frame}
 
-\begin{frame}{Example 2: Catalyst Placement in a Chemical Reactor}
+% ------------------------------------------------------------
+\subsection{A time-dependent problem}
+\begin{frame}{Example 2: Optimal Control of the Heat Equation}
+  \visible<2->{
+  \begin{qbox}
+  Suppose I would like to heat the room over a time interval $[0,T]$. How should I heat it to reach a final temperature profile $u_T$?
+  \end{qbox}
+  }  
+  \visible<3->{
+  \begin{hlbox}
+  The PDE changes to reflect the dynamics ($Q_{T} := D \times (0,T)$),
+  \[
+    \partial_t u - \Delta u = z \;\;\text{in } Q, \qquad u = 0 \;\;\text{on } \partial D \times(0,T), \qquad u(0) = u_0.
+  \]
+  We now have $Z_{\rm ad} := \{ z \in L^2(Q_T) : z_a \le z \le z_b \text{ a.e.\ in } Q_{T} \}$.
+    \end{hlbox}
+  }
+  \visible<4->{
+  \begin{hlbox}
+  The objective is now to find $z \in Z_{\rm ad}$ such that $u(T)$ is close to $u_{T}$
+        \[
+    J(u,z) :=  \frac{1}{2}\norm{u(T) - u_T}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{L^2(Q_{T})}^2
+  \]
+  \end{hlbox}
+}
+  % \begin{itemize}
+    % \item State space $\WT = \{ y \in L^2(0,T;\Hzero) : \partial_t y \in L^2(0,T;H^{-1}(\Omega)) \}$.
+    % \item Preview: the adjoint equation runs \alert{backward in time}.
+  % \end{itemize}
+  % \todo{Insert from your .tex file}
+\end{frame}
+
+\begin{frame}{Example 3: Catalyst Placement in a Chemical Reactor}
   \framesubtitle{See, e.g., Tr\"oltzsch (2010), Ch.~4; Casas--Tr\"oltzsch (quasilinear case)}
   \visible<2->{
   \begin{qbox}
@@ -60,7 +93,7 @@
 
   \visible<4->{
   \begin{hlbox}
-  Catalyst bounds and the same objective:
+  Catalyst bounds and similar objective:
   \[
     Z_{\rm ad} := \{ 0 \le z_a \le z \le z_b \text{ a.e.} \}, \qquad
     J(u,z) := \tfrac12 \norm{u - u_d}_{\Ltwo}^2 + \tfrac{\alpha}{2}\norm{z}_{\Ltwo}^2 .
@@ -75,78 +108,96 @@
   % }
 \end{frame}
 
-\begin{frame}{What is PDE-constrained optimization?}
-  \[
-    \min_{y,\,u}\; J(y,u)
-    \quad\text{s.t.}\quad
-    e(y,u) = 0 \;\;(\text{PDE}),\qquad u \in \Uad .
-  \]
-  \begin{itemize}
-    \item $u$: \emph{control / design / parameter} \quad (what we choose)
-    \item $y$: \emph{state} \quad (determined by $u$ through the PDE)
-    \item $J$: objective \quad (tracking, cost, risk, \dots)
-    \item $\Uad$: admissible controls \quad (bounds, physical limits)
-  \end{itemize}
-  \vspace{1ex}
-  \todo{Optional: one slide with application pictures (heating, flow control, shape design, inverse problems)}
-\end{frame}
-
-
-
-% ------------------------------------------------------------
-\subsection{A time-dependent problem}
-\begin{frame}{Example 2: Optimal control of the heat equation}
-  \[
-    \min_{y,u}\; \frac12 \norm{y - y_Q}_{L^2(Q)}^2 + \frac{\beta}{2}\norm{y(T) - y_T}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{u}_{L^2(Q)}^2
-  \]
-  subject to, with $Q := \Omega \times (0,T)$,
-  \[
-    \partial_t y - \Delta y = u \;\;\text{in } Q, \qquad y = 0 \;\;\text{on } \partial\Omega\times(0,T), \qquad y(0) = y_0,
-  \]
-  \[
-    u_a \le u \le u_b \;\;\text{a.e.\ in } Q.
-  \]
-  \begin{itemize}
-    \item State space $\WT = \{ y \in L^2(0,T;\Hzero) : \partial_t y \in L^2(0,T;H^{-1}(\Omega)) \}$.
-    \item Preview: the adjoint equation runs \alert{backward in time}.
-  \end{itemize}
-  \todo{Insert from your .tex file}
-\end{frame}
-
 % ------------------------------------------------------------
 \subsection{A problem under uncertainty}
-\begin{frame}{Example 3: Optimization under uncertainty}
-  Random diffusivity $\kappa(x,\omega)$, $\omega \in (\Xi,\mathcal{F},\mathbb{P})$:
-  \[
-    -\nabla\cdot\big(\kappa(\cdot,\omega)\nabla y(\omega)\big) = u \;\;\text{in } \Omega, \qquad y(\omega) = 0 \;\;\text{on } \partial\Omega, \quad \text{a.s.}
+\begin{frame}{Example 4: Optimization under Uncertainty}
+  \visible<2->{
+  \begin{qbox}
+  Suppose the diffusivity $\kappa(u)$ has been estimated from data and is only understandable through realizations of a random field $\kappa : D \times \Omega \to \mathbb R$. What changes?
+  \end{qbox}
+  }
+
+\visible<3->{
+\begin{hlbox}
+    We now view the PDE \textbf{almost surely} wrt to a probability measure $\mathbb P$:
+      \[
+    -\nabla\cdot\big(\kappa(\cdot,\omega)\nabla u(\omega)\big) + z\,R(u) = f \;\;\text{in } D, \qquad u(\omega) = 0 \;\;\text{on } \partial D, \quad \mathbb P-\text{a.s.}
   \]
+\end{hlbox}
+}
+
+\visible<4->{
+\begin{hlbox}
+    While $z$ is still deterministic, $u$ is now a random field in $L^p(\Omega,\mathcal{F},\mathbb P; H^1_0(D))$.
+\end{hlbox}
+}
+
+\visible<5->{
+\begin{hlbox}
+The objective $J(u(\omega),z)$ is now implicitly \textbf{random}. We scalarize with a \textbf{risk measure} $\mathcal{R}$ (mean, average-value-at-risk, ...):
   \[
-    \min_{u \in \Uad}\; \mathcal{R}\Big[\tfrac12 \norm{y(\omega) - y_d}_{\Ltwo}^2\Big] + \frac{\alpha}{2}\norm{u}_{\Ltwo}^2
+J(u,z) := \mathcal{R}\Big[\tfrac12 \norm{u(\cdot) - u_d}_{\Ltwo}^2\Big] + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2
   \]
-  \begin{itemize}
-    \item $u$ deterministic, $y = y(\omega)$ random.
-    \item $\mathcal{R}$: risk measure, e.g.\ $\E$, mean $+$ variance, $\mathrm{CVaR}_\beta$.
-    \item Same workflow: well-posedness (a.s., uniform ellipticity), existence, adjoint \emph{per realization}.
-  \end{itemize}
-  \todo{Insert from your .tex file; reference e.g.\ Kouri--Shapiro}
+\end{hlbox}
+}
 \end{frame}
 
-\begin{frame}{Common structure}
+% ------------------------------------------------------------
+\subsection{Summary}
+\begin{frame}{Summary: PDE-Constrained Optimization}
+  \visible<2->{
+  \begin{hlbox}
+  All four examples are instances of
+  \[
+    \min_{(u,z)}\; J(u,z) \quad\text{subject to}\quad e(u,z) = 0, \qquad z \in Z_{\rm ad}.
+  \]
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+  \begin{itemize}
+    \item $z$: \textbf{control}, design, source \hfill (decision variable)
+    \item $u$: \textbf{state} \hfill (determined by $z$ through the PDE $e(u,z) = 0$)
+    \item $J$: \textbf{objective} \hfill (tracking, terminal observation, risk, \dots)
+    \item $Z_{\rm ad}$: \textbf{admissible controls} \hfill (bounds, physical limits)
+  \end{itemize}
+  \end{hlbox}
+  }
+
+  \visible<4->{
+  \begin{qbox}
+  If the PDE has a unique solution $u = S(z)$ for each $z$, we can eliminate the state:
+  \(
+    \min_{z \in Z_{\rm ad}} j(z) := J(S(z),z).
+  \) This is called the \textbf{reduced formulation}.
+  \end{qbox}
+  }
+\end{frame}
+
+\begin{frame}{Common Structure}
   \begin{center}
-  \renewcommand{\arraystretch}{1.3}
-  \begin{tabular}{@{}llll@{}}
+  \small
+  \renewcommand{\arraystretch}{1.35}
+  \begin{tabular}{@{}lllll@{}}
     \toprule
-    & Elliptic & Parabolic & Uncertain \\
+    & 1: Poisson & 2: Heat & 3: Catalyst & 4: Uncertainty \\
     \midrule
-    State space $Y$ & $\Hzero$ & $\WT$ & $L^2_{\mathbb{P}}(\Xi;\Hzero)$ \\
-    Control space $U$ & $\Ltwo$ & $L^2(Q)$ & $\Ltwo$ \\
-    Solution map & linear & linear (affine) & linear for each $\omega$ \\
-    Adjoint & elliptic & backward parabolic & one per sample \\
+    State space & $\Hzero$ & $\WT$ & $\Hzero$ & $L^p_{\mathbb{P}}(\Omega;\Hzero)$ \\
+    Control space & $\Ltwo$ & $L^2(Q_T)$ & $\Ltwo$ & $\Ltwo$ \\
+    Map $z \mapsto u$ & linear & affine & nonlinear & nonlinear, per $\omega$ \\
+    Objective & tracking & terminal & tracking & risk of tracking \\
+    Adjoint & elliptic & backward parabolic & linearized elliptic & one per $\omega$ \\
+    Reduced problem & convex & convex & nonconvex & nonconvex \\
     \bottomrule
   \end{tabular}
   \end{center}
   \vspace{1ex}
-  \begin{block}{Guiding question}
-    How do we go from a model to a computable optimality system---and then to algorithms?
-  \end{block}
+  \visible<2->{
+  \begin{qbox}
+   Does an optimal control exist? How do we characterize it? How do we compute it?
+  \end{qbox}
+  }
 \end{frame}
+
+\end{document}
