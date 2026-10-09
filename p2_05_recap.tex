@@ -28,4 +28,41 @@
   This fixed-point characterization drives everything in Part II.
 \end{frame}
 
+% ------------------------------------------------------------
+% The VI in pointwise form (moved from Part I)
+% ------------------------------------------------------------
+\begin{frame}{The Variational Inequality in Pointwise Form}
+  \begin{hlbox}
+    \textbf{Pointwise form.} For box constraints, the VI holds if and only if, for a.e.\ $x \in D$,
+    \[
+      \big(\bar p(x) + \alpha\bar z(x)\big)\big(v - \bar z(x)\big) \ge 0 \qquad \forall v \in [z_a(x), z_b(x)] .
+    \]
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Projection formula} ($\alpha > 0$):
+    \(
+      \bar z = P_{[z_a,z_b]}\big(-\tfrac{1}{\alpha}\bar p\big) = \max\big\{z_a, \min\{z_b, -\tfrac{1}{\alpha}\bar p\}\big\} \;\text{a.e.}
+    \)
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{KKT form.} With $\mu_a := (\bar p + \alpha\bar z)^+$ and $\mu_b := (\bar p + \alpha\bar z)^-$:
+    \[
+      \bar p + \alpha\bar z - \mu_a + \mu_b = 0, \qquad \mu_a,\mu_b \ge 0, \qquad
+      \mu_a(\bar z - z_a) = \mu_b(z_b - \bar z) = 0 .
+    \]
+  \end{hlbox}
+  }
+
+  \visible<4->{
+  \begin{qbox}
+    With $s = 1/\alpha$: \; $\bar z = P_{Z_{\rm ad}}\big(\bar z - s\nabla\hat J(\bar z)\big)$, the starting point for projected gradients.
+  \end{qbox}
+  }
+\end{frame}
+
 \end{document}

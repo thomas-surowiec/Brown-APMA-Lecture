@@ -3,9 +3,9 @@
 % ============================================================
 %  4. Adjoint calculus: first and second order   (~13 min)
 % ============================================================
-\section{Adjoint Calculus}
+\section{Appendix: Adjoint Calculus}
 
-\begin{frame}{Sensitivities vs.\ adjoints}
+\begin{frame}[label=adjoints]{Appendix: Sensitivities vs.\ Adjoints}
   Goal: compute $f'(u)$ where $u \in \R^m$ after discretization ($m$ large).
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
@@ -26,6 +26,7 @@
   \end{columns}
   \vspace{1ex}
   Sensitivities pay off only for few controls, or many outputs (constraints).
+  \vfill\hfill\hyperlink{hessvec<4>}{\beamerreturnbutton{Back to Part II}}
 \end{frame}
 
 \begin{frame}{Recipe: reduced gradient}
@@ -40,6 +41,7 @@
   \end{algorithm}
   \vspace{1ex}
   \textbf{Model problem:} solve $-\Delta y = u$, solve $-\Delta p = y - y_d$, then $\nabla f(u) = \alpha u + p$.
+  \vfill\hfill\hyperlink{hessvec<4>}{\beamerreturnbutton{Back to Part II}}
 \end{frame}
 
 \begin{frame}{Second derivatives}
@@ -52,6 +54,7 @@
     \item Forming $\nabla^2 f(u)$ is prohibitive (dense, $m\times m$).
     \item Krylov/Newton methods only need \alert{Hessian-vector products} $\nabla^2 f(u)h$.
   \end{itemize}
+  \vfill\hfill\hyperlink{hessvec<4>}{\beamerreturnbutton{Back to Part II}}
 \end{frame}
 
 \begin{frame}{Recipe: Hessian-vector product}
@@ -66,6 +69,7 @@
     \item \textbf{Cost:} 2 linear solves with $e_y$ and $e_y^*$ (reuse factorizations/preconditioners).
     \item \textbf{Model problem:} $-\Delta\delta y = h$, \; $-\Delta\delta p = \delta y$, \; $f''(u)h = \alpha h + \delta p$, \; i.e.\ $f'' = S^*S + \alpha I$.
   \end{itemize}
+  \vfill\hfill\hyperlink{hessvec<4>}{\beamerreturnbutton{Back to Part II}}
 \end{frame}
 
 \begin{frame}{Second-order sufficient conditions (remark)}
@@ -78,6 +82,7 @@
     \item Subtlety: \alert{two-norm discrepancy} (differentiability in $L^\infty$, coercivity in $L^2$).
   \end{itemize}
   \todo{Keep brief or drop depending on time}
+  \vfill\hfill\hyperlink{hessvec<4>}{\beamerreturnbutton{Back to Part II}}
 \end{frame}
 
 \begin{frame}{Adjoints for the time-dependent problem}
@@ -91,6 +96,7 @@
     \item Optimize-then-discretize vs.\ discretize-then-optimize: do the discrete adjoint and the discretized adjoint agree? (time stepping matters)
   \end{itemize}
   \todo{Optional: commuting diagram slide}
+  \vfill\hfill\hyperlink{hessvec<4>}{\beamerreturnbutton{Back to Part II}}
 \end{frame}
 
 \end{document}

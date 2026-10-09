@@ -200,4 +200,54 @@ J(u,z) := \mathcal{R}\Big[\tfrac12 \norm{u(\cdot) - u_d}_{\Ltwo}^2\Big] + \frac{
   }
 \end{frame}
 
+% ------------------------------------------------------------
+\subsection{Roadmap}
+\begin{frame}{Roadmap: Analysis of a Model Problem}
+  \vspace*{\fill}
+  \begin{center}
+  \begin{tikzpicture}[
+      card/.style={rectangle, rounded corners=2mm, fill=brownred!6,
+        minimum width=2.4cm, minimum height=2.1cm, text width=2.2cm,
+        align=center, inner sep=1.5mm,
+        blur shadow={shadow blur steps=6, shadow xshift=0.6mm, shadow yshift=-0.6mm, shadow opacity=25}},
+      num/.style={circle, fill=accent, text=white, font=\scriptsize\bfseries,
+        inner sep=0pt, minimum size=4.2mm},
+      arr/.style={-{Stealth[length=2mm]}, semithick, muted},
+      brc/.style={decorate, decoration={brace, mirror, amplitude=5pt}, thick, brownred!70},
+      lab/.style={font=\small\itshape, text=brownred, align=center}]
+    \foreach \i/\t/\s [count=\k] in {
+        0/{State equation}/{well-posed\\(Lax--Milgram)},
+        1/{Reduced problem}/{eliminate\\$u = S z$},
+        2/{Existence}/{direct method},
+        3/{Optimality}/{variational\\inequality},
+        4/{Adjoint}/{KKT system}} {
+      \visible<\k->{
+        \node[card] (c\k) at (\i*2.8, 0)
+          {\parbox[c][8mm][c]{2.2cm}{\centering\small\bfseries \t}\\[0.5ex]\parbox[t][8mm][t]{2.2cm}{\centering\footnotesize\color{muted}\s}};
+        \node[num] at (c\k.north west) {\k};
+      }
+    }
+    \foreach \a/\b in {1/2,2/3,3/4,4/5} {
+      \visible<\b->{\draw[arr] (c\a.east) -- (c\b.west);}
+    }
+
+    \visible<6->{
+      \draw[brc] ([yshift=-2mm]c1.south west) -- ([yshift=-2mm]c3.south east)
+        node[midway, below=7pt, lab] {Does an optimal control exist?};
+    }
+    \visible<7->{
+      \draw[brc] ([yshift=-2mm]c4.south west) -- ([yshift=-2mm]c5.south east)
+        node[midway, below=7pt, lab] {How do we characterize it?};
+    }
+  \end{tikzpicture}
+  \end{center}
+  \vspace*{\fill}
+  \visible<8->{
+  \begin{qbox}
+    We carry this out for Example 1; the general abstract setting is in the appendix.
+  \end{qbox}
+  }
+  \vspace*{\fill}
+\end{frame}
+
 \end{document}

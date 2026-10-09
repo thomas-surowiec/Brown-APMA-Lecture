@@ -3,9 +3,9 @@
 % ============================================================
 %  3. Abstract setting   (~15 min)
 % ============================================================
-\section{The Abstract Setting}
+\section{Appendix: The Abstract Setting}
 
-\begin{frame}{Abstract problem}
+\begin{frame}[label=abstract]{Appendix: The Abstract Setting}
   Banach spaces $Y$ (state), $U$ (control, Hilbert), $Z$ (residual):
   \[
     \min_{(y,u) \in Y\times U}\; J(y,u) \quad\text{s.t.}\quad e(y,u) = 0 \;\text{in } Z, \quad u \in \Uad .
@@ -19,6 +19,7 @@
   \end{enumerate}
   \vspace{0.5ex}
   Example 1: $e(y,u) = -\Delta y - u$, \; $Y = \Hzero$, \; $Z = H^{-1}(D)$.
+  \vfill\hfill\hyperlink{kkt<3>}{\beamerreturnbutton{Back to Part I}}
 \end{frame}
 
 \begin{frame}{The implicit function theorem}
@@ -34,6 +35,7 @@
     \item The problem becomes $\min_{u \in \Uad} f(u)$: a smooth, constrained problem in $U$.
     \item Without convexity of $f$: \emph{local} solutions only; uniqueness is lost.
   \end{itemize}
+  \vfill\hfill\hyperlink{kkt<3>}{\beamerreturnbutton{Back to Part I}}
 \end{frame}
 
 \begin{frame}{Existence in the abstract setting}
@@ -50,6 +52,7 @@
     \item Proof: identical to the direct method, with compactness replacing linearity.
     \item Typical source of weak-to-strong continuity: a priori bounds plus compact embeddings.
   \end{itemize}
+  \vfill\hfill\hyperlink{kkt<3>}{\beamerreturnbutton{Back to Part I}}
 \end{frame}
 
 \begin{frame}{First-order conditions and the adjoint}
@@ -70,6 +73,7 @@
   \begin{theorem}
     If $\ub$ is a local solution, then $f'(\ub)(u - \ub) \ge 0$ for all $u \in \Uad$.
   \end{theorem}
+  \vfill\hfill\hyperlink{kkt<3>}{\beamerreturnbutton{Back to Part I}}
 \end{frame}
 
 \begin{frame}{The Lagrangian viewpoint}
@@ -88,6 +92,7 @@
     \item $f(u) = \Lag(S(u),u,p)$ for \emph{any} $p$; the choice $p = p(u)$ kills the $S'(u)$ term.
     \item Sign convention for $p$ is a choice; ours matches Section 2 ($e_u = -I \Rightarrow \nabla f = \alpha u + p$).
   \end{itemize}
+  \vfill\hfill\hyperlink{kkt<3>}{\beamerreturnbutton{Back to Part I}}
 \end{frame}
 
 \begin{frame}{Example: a semilinear state equation}
@@ -102,6 +107,7 @@
     \item $f$ is \alert{nonconvex}: existence by compactness, conditions are only necessary.
   \end{itemize}
   \todo{Decide whether to keep this example or move it to an exercise}
+  \vfill\hfill\hyperlink{kkt<3>}{\beamerreturnbutton{Back to Part I}}
 \end{frame}
 
 \end{document}

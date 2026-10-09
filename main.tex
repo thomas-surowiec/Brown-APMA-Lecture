@@ -33,16 +33,12 @@
 
 % ------------------------- PART I --------------------------
 \part{Theory}
-\begin{frame}[plain]\partpage\end{frame}
 
 \subfile{p1_01_examples}
 \subfile{p1_02_modelproblem}
-\subfile{p1_03_abstract}
-\subfile{p1_04_adjoints}
 
 % ------------------------- PART II -------------------------
 \part{Algorithms}
-\begin{frame}[plain]\partpage\end{frame}
 
 \subfile{p2_05_recap}
 \subfile{p2_06_innerproduct}
@@ -53,5 +49,12 @@
 \subfile{p2_11_outlook}
 
 \subfile{references}
+
+% ------------------------- APPENDIX ------------------------
+\AtBeginSection[]{}   % no splash pages in the appendix
+\appendix
+\subfile{app_lagrange}
+\subfile{p1_03_abstract}
+\subfile{app_adjoints}
 
 \end{document}

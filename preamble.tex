@@ -28,7 +28,7 @@
 \usepackage{amsmath,amssymb,mathtools,bm}
 \usepackage{booktabs}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,decorations.pathreplacing,shadows.blur}
 \usepackage[ruled,linesnumbered,noend]{algorithm2e}
 \SetAlFnt{\small}
 
@@ -77,4 +77,61 @@
 % Each section file starts with \documentclass[main.tex]{subfiles}
 \usepackage{subfiles}
 
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,decorations.pathreplacing,shadows.blur}
+% ---------- navigation buttons (appendix links) ----------
+\setbeamercolor{button}{bg=brownred!15,fg=brownred}
+\setbeamerfont{button}{size=\footnotesize}
+
+% ---------- splash pages ----------
+% Section splash: number badge and title on a tinted panel (left),
+% the current part's sections with the current one highlighted (right).
+\AtBeginSection[]{%
+  \begingroup
+  \setbeamertemplate{footline}{}
+  \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[brownred!7] (current page.north west) rectangle ([xshift=0.42\paperwidth]current page.south west);
+      \node[font=\small\itshape, text=muted]
+        at ([xshift=0.21\paperwidth, yshift=0.24\paperheight]current page.west)
+        {Part \insertromanpartnumber: \insertpart};
+      \node[circle, fill=accent, text=white, font=\LARGE\bfseries, minimum size=14mm,
+            blur shadow={shadow blur steps=6, shadow xshift=0.6mm, shadow yshift=-0.6mm, shadow opacity=25}]
+        at ([xshift=0.21\paperwidth, yshift=0.08\paperheight]current page.west)
+        {\insertsectionnumber};
+      \node[text width=0.34\paperwidth, align=center, font=\Large\bfseries, text=brownred,
+            execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}]
+        at ([xshift=0.21\paperwidth, yshift=-0.08\paperheight]current page.west)
+        {\insertsectionhead};
+    \end{tikzpicture}
+    \begin{columns}[c]
+      \begin{column}{0.42\paperwidth}\end{column}
+      \begin{column}{0.48\paperwidth}
+        \setbeamercolor{section in toc}{fg=accent}
+        \setbeamerfont{section in toc}{series=\bfseries}
+        \setbeamercolor{section in toc shaded}{fg=muted}
+        \setbeamerfont{section in toc shaded}{series=\mdseries}
+        \setbeamertemplate{section in toc shaded}[default][80]
+        \small\tableofcontents[currentsection, hideallsubsections, sectionstyle=show/shaded]
+      \end{column}
+    \end{columns}
+  \end{frame}
+  \endgroup
+}
+
+% Part splash: full tinted page with large part number and title.
+\AtBeginPart{%
+  \begingroup
+  \setbeamertemplate{footline}{}
+  \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[brownred!7] (current page.north west) rectangle (current page.south east);
+      \fill[accent] ([yshift=-0.06\paperheight]current page.west) rectangle ([xshift=0.012\paperwidth, yshift=0.10\paperheight]current page.west);
+      \node[anchor=west, font=\Large, text=muted]
+        at ([xshift=0.08\paperwidth, yshift=0.08\paperheight]current page.west)
+        {Part \insertromanpartnumber};
+      \node[anchor=west, font=\Huge\bfseries, text=brownred]
+        at ([xshift=0.08\paperwidth, yshift=-0.02\paperheight]current page.west)
+        {\insertpart};
+    \end{tikzpicture}
+  \end{frame}
+  \endgroup
+}
