@@ -5,42 +5,6 @@
 % ============================================================
 \section{Projected Newton Methods}
 
-% ------------------------------------------------------------
-% Second derivatives (moved from Part I adjoint section)
-% ------------------------------------------------------------
-\begin{frame}[label=hessvec]{Second Derivatives: Hessian--Vector Products}
-  \begin{qbox}
-    Newton-type methods need $\hat J''(z)h$ for given $h$, never the full Hessian.
-  \end{qbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Model problem.} From $\nabla\hat J(z) = S^*(Sz - u_d) + \alpha z$ (Step 5):
-    \(
-      \hat J''(z)h = S^*S h + \alpha h,
-    \)
-    independent of $z$.
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{hlbox}
-    \textbf{Recipe} (two linear PDE solves per product):
-    \begin{enumerate}
-      \item Linearized state: \; $-\Delta \delta u = h$ in $D$, $\delta u = 0$ on $\partial D$ \hfill ($\delta u = Sh$)
-      \item Second adjoint: \; $-\Delta \delta p = \delta u$ in $D$, $\delta p = 0$ on $\partial D$ \hfill ($\delta p = S^*\delta u$)
-      \item Assemble: \; $\hat J''(z)h = \delta p + \alpha h$
-    \end{enumerate}
-  \end{hlbox}
-  }
-
-  \visible<4->{
-  \begin{qbox}
-    For nonlinear PDEs (Example 3), second derivatives of the PDE enter through the adjoint state. \hfill\hyperlink{adjoints}{\beamergotobutton{Adjoint calculus}}
-  \end{qbox}
-  }
-\end{frame}
-
 \begin{frame}{Why not Newton plus projection?}
   \begin{itemize}
     \item Projected gradient: robust, but linear convergence.

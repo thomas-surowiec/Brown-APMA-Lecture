@@ -1,68 +1,154 @@
 \documentclass[main.tex]{subfiles}
 \begin{document}
 % ============================================================
-%  5. Recap and bridge   (~3 min)
+%  5. Recap of Part I
 % ============================================================
-\section{Recap: What We Can Compute}
+\section{Recap of Part I}
 
-\begin{frame}{Recap: the reduced problem and its oracle}
-  \[
-    \min_{u \in \Uad}\; f(u), \qquad \Uad = \{ u \in U : u_a \le u \le u_b \}.
-  \]
-  \begin{center}
-  \renewcommand{\arraystretch}{1.3}
-  \begin{tabular}{@{}lll@{}}
-    \toprule
-    Quantity & How & Cost (PDE solves) \\
-    \midrule
-    $f(u)$ & state solve & 1 (nonlinear) \\
-    $\nabla f(u)$ & $+$ adjoint solve & $+1$ (linear) \\
-    $\nabla^2 f(u)h$ & linearized $+$ second adjoint & $+2$ (linear) \\
-    \bottomrule
-  \end{tabular}
-  \end{center}
-  \vspace{1ex}
-  \begin{block}{Optimality}
-    $\ub = \Proj\big(\ub - s\nabla f(\ub)\big)$ for some (all) $s > 0$.
-  \end{block}
-  This fixed-point characterization drives everything in Part II.
-\end{frame}
-
-% ------------------------------------------------------------
-% The VI in pointwise form (moved from Part I)
-% ------------------------------------------------------------
-\begin{frame}{The Variational Inequality in Pointwise Form}
+\begin{frame}{Recap of Part I}
   \begin{hlbox}
-    \textbf{Pointwise form.} For box constraints, the VI holds if and only if, for a.e.\ $x \in D$,
+    \textbf{Reduced problem} (Sections 2--3). With the solution operator $S$,
     \[
-      \big(\bar p(x) + \alpha\bar z(x)\big)\big(v - \bar z(x)\big) \ge 0 \qquad \forall v \in [z_a(x), z_b(x)] .
+      \min_{z \in Z_{\rm ad}}\; \hat J(z) := \frac12 \norm{Sz - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2 .
     \]
+    For $\alpha > 0$, $\hat J$ is $\alpha$-strongly convex, and there is a unique solution $\bar z$.
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Projection formula} ($\alpha > 0$):
-    \(
-      \bar z = P_{[z_a,z_b]}\big(-\tfrac{1}{\alpha}\bar p\big) = \max\big\{z_a, \min\{z_b, -\tfrac{1}{\alpha}\bar p\}\big\} \;\text{a.e.}
-    \)
+    \textbf{Optimality system} (Section 4). $\bar z$ is optimal if and only if
+    \[
+      \begin{aligned}
+        -\Delta \bar u &= \bar z \;\;\text{in } D, \quad \bar u = 0 \;\;\text{on } \partial D && \text{(state)}\\
+        -\Delta \bar p &= \bar u - u_d \;\;\text{in } D, \quad \bar p = 0 \;\;\text{on } \partial D && \text{(adjoint)}\\
+        (\bar p + \alpha \bar z,\; z - \bar z) &\ge 0 \quad \forall z \in Z_{\rm ad} && \text{(VI)}
+      \end{aligned}
+    \]
+  \end{hlbox}
+  }
+\end{frame}
+
+\begin{frame}{Recap of Part I: Computing the Gradient}
+  \begin{hlbox}
+    \textbf{Gradient at any $z \in \Ltwo$} (Section 5):
+    \begin{enumerate}
+      \item<2-> Solve the state equation: \; $-\Delta u = z$ in $D$, $u = 0$ on $\partial D$.
+      \item<3-> Solve the adjoint equation: \; $-\Delta p = u - u_d$ in $D$, $p = 0$ on $\partial D$.
+      \item<4-> Set \; $\nabla \hat J(z) = p + \alpha z$.
+    \end{enumerate}
+  \end{hlbox}
+
+  \visible<5->{
+  \begin{hlbox}
+    Evaluating $\hat J(z)$ costs one state solve; $\nabla \hat J(z)$ costs one more. Projecting onto $Z_{\rm ad}$ is pointwise and cheap.
+  \end{hlbox}
+  }
+
+  \visible<6->{
+  \begin{qbox}
+    How do we turn this into an algorithm whose behavior does not depend on the mesh?
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+% From the VI to pointwise conditions
+% ------------------------------------------------------------
+\begin{frame}{From the Variational Inequality to Pointwise Conditions}
+  \begin{qbox}
+    \textbf{Lemma.} With $g := \bar p + \alpha \bar z$, the VI $(g, z - \bar z) \ge 0$ $\forall z \in Z_{\rm ad}$ holds if and only if, a.e.\ in $D$,
+    \[
+      g \;\begin{cases}
+        = 0 & \text{where } z_a < \bar z < z_b,\\
+        \ge 0 & \text{where } \bar z = z_a,\\
+        \le 0 & \text{where } \bar z = z_b.
+      \end{cases}
+    \]
+  \end{qbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{(i) Localize.} $Z_{\rm ad}$ is defined pointwise: for $w \in Z_{\rm ad}$ and measurable $M \subset D$, $\bar z + \chi_M (w - \bar z) \in Z_{\rm ad}$. So $\int_M g\,(w - \bar z) \dd x \ge 0$ for all $M$, i.e.\ $g\,(w - \bar z) \ge 0$ a.e.
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{hlbox}
-    \textbf{KKT form.} With $\mu_a := (\bar p + \alpha\bar z)^+$ and $\mu_b := (\bar p + \alpha\bar z)^-$:
-    \[
-      \bar p + \alpha\bar z - \mu_a + \mu_b = 0, \qquad \mu_a,\mu_b \ge 0, \qquad
-      \mu_a(\bar z - z_a) = \mu_b(z_b - \bar z) = 0 .
-    \]
+    \textbf{(ii) Test with the bounds} $z_a, z_b \in Z_{\rm ad}$: \; $g \ge 0$ where $\bar z < z_b$, \; $g \le 0$ where $\bar z > z_a$.\\[0.3ex]
+    \visible<4->{\textbf{(iii) Converse.} The cases give $g\,(z - \bar z) \ge 0$ a.e.\ for all $z \in Z_{\rm ad}$; integrate. \hfill \qed}
   \end{hlbox}
   }
+\end{frame}
 
-  \visible<4->{
+% ------------------------------------------------------------
+% The projection formula
+% ------------------------------------------------------------
+\begin{frame}{The Projection Formula}
+  \begin{columns}[T]
+    \begin{column}{0.56\textwidth}
+      \begin{hlbox}
+        With $g = \bar p + \alpha\bar z$ and $\alpha > 0$, read off the three cases:
+        \begin{itemize}
+          \item<2-> $z_a < \bar z < z_b$: \; $g = 0$, so $\bar z = -\tfrac{1}{\alpha}\bar p$.
+          \item<3-> $\bar z = z_a$: \; $g \ge 0$, so $-\tfrac{1}{\alpha}\bar p \le z_a$.
+          \item<4-> $\bar z = z_b$: \; $g \le 0$, so $-\tfrac{1}{\alpha}\bar p \ge z_b$.
+        \end{itemize}
+      \end{hlbox}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      \visible<5->{
+      \begin{center}
+      \begin{tikzpicture}[scale=0.85]
+        \draw[-{Stealth[length=2mm]}, muted] (-0.3,0) -- (3.8,0) node[right, font=\footnotesize] {$-\tfrac{1}{\alpha}\bar p$};
+        \draw[-{Stealth[length=2mm]}, muted] (0,-0.3) -- (0,3.0) node[above, font=\footnotesize] {$\bar z$};
+        \draw[dashed, muted!60] (0,0.8) -- (3.6,0.8);
+        \draw[dashed, muted!60] (0,2.2) -- (3.6,2.2);
+        \node[left, font=\footnotesize] at (0,0.8) {$z_a$};
+        \node[left, font=\footnotesize] at (0,2.2) {$z_b$};
+        \draw[very thick, accent] (0.1,0.8) -- (0.8,0.8) -- (2.2,2.2) -- (3.5,2.2);
+      \end{tikzpicture}
+      \end{center}
+      }
+    \end{column}
+  \end{columns}
+
+  \visible<5->{
   \begin{qbox}
-    With $s = 1/\alpha$: \; $\bar z = P_{Z_{\rm ad}}\big(\bar z - s\nabla\hat J(\bar z)\big)$, the starting point for projected gradients.
+    \textbf{Projection formula.} \;
+    $\bar z = P_{[z_a,z_b]}\big(-\tfrac{1}{\alpha}\bar p\big) = \max\big\{z_a, \min\{z_b, -\tfrac{1}{\alpha}\bar p\}\big\}$ \; a.e.\ in $D$.
   \end{qbox}
   }
+
+  \visible<6->{
+  \begin{hlbox}
+    Equivalently, with $s = 1/\alpha$: \; $\bar z = P_{Z_{\rm ad}}\big(\bar z - s\nabla\hat J(\bar z)\big)$, the starting point for projected gradients.
+  \end{hlbox}
+  }
 \end{frame}
+
+% % ------------------------------------------------------------
+% % KKT form with multipliers for the bounds
+% % ------------------------------------------------------------
+% \begin{frame}{Multipliers for the Control Bounds}
+%   \begin{hlbox}
+%     \textbf{KKT form.} Split $g = \bar p + \alpha \bar z$ into positive and negative parts, $\mu_a := g^+$, $\mu_b := g^-$:
+%     \[
+%       \bar p + \alpha\bar z - \mu_a + \mu_b = 0, \qquad \mu_a,\mu_b \ge 0, \qquad
+%       \mu_a(\bar z - z_a) = \mu_b(z_b - \bar z) = 0 \;\;\text{a.e.}
+%     \]
+%   \end{hlbox}
+
+%   \visible<2->{
+%   \begin{hlbox}
+%     Complementarity is the case distinction: $\mu_a > 0$ only where $\bar z = z_a$, and $\mu_b > 0$ only where $\bar z = z_b$.
+%   \end{hlbox}
+%   }
+
+%   \visible<3->{
+%   \begin{qbox}
+%     $\mu_a, \mu_b \in \Ltwo$ are the Lagrange multipliers for the bounds, just as $\bar p$ is the multiplier for the PDE.
+%   \end{qbox}
+%   }
+% \end{frame}
 
 \end{document}

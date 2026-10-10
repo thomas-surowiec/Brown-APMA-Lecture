@@ -1,0 +1,126 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  5. The general picture
+% ============================================================
+\section{The General Picture}
+
+% ------------------------------------------------------------
+% 5a: abstract problem and the implicit function theorem
+% ------------------------------------------------------------
+\begin{frame}[label=general]{The General Picture: An Abstract Problem}
+  \begin{hlbox}
+    Let $U$, $W$ be Banach spaces, $Z$ a Hilbert space, $Z_{\rm ad} \subset Z$ closed and convex:
+    \[
+      \min_{(u,z) \in U \times Z}\; J(u,z) \quad\text{subject to}\quad e(u,z) = 0 \;\text{in } W, \quad z \in Z_{\rm ad}.
+    \]
+    Assume $J$, $e$ are $C^1$, that $e(u,z) = 0$ has a unique solution $u = S(z)$, and that $e_u(S(z),z) \in \mathcal{L}(U,W)$ is invertible.
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{qbox}
+    \textbf{Implicit function theorem.} $S$ is $C^1$, and $\delta u = S'(z)h$ solves the \textbf{linearized state equation} \; $e_u(S(z),z)\,\delta u = -e_z(S(z),z)\,h$.
+  \end{qbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{Model problem.} $e(u,z) = Au - \iota z$ with $W = H^{-1}(D)$: \; $e_u = A$, $e_z = -\iota$, so $S'(z) = A^{-1}\iota = S$.
+  \end{hlbox}
+  }
+  \vfill\hfill\hyperlink{abstract}{\beamergotobutton{Details: abstract setting}}
+\end{frame}
+
+% ------------------------------------------------------------
+% 5b: first-order adjoint calculus
+% ------------------------------------------------------------
+\begin{frame}{Adjoint Calculus: The Derivative}
+  \begin{hlbox}
+    Let $\hat J(z) := J(S(z),z)$. By the chain rule and the linearized state equation,
+    \[
+      \begin{aligned}
+        \visible<1->{\hat J'(z)h &= J_u\, S'(z)h + J_z h}\\
+        \visible<2->{&= -\dual{J_u}{e_u^{-1} e_z h} + J_z h}\\
+        \visible<3->{&= -\dual{e_u^{-*} J_u}{e_z h} + J_z h .}
+      \end{aligned}
+    \]
+  \end{hlbox}
+
+  \visible<4->{
+  \begin{qbox}
+    \textbf{Adjoint state.} Let $p \in W^*$ solve $e_u(u,z)^* p = J_u(u,z)$. Then
+    \[
+      \hat J'(z) = J_z(u,z) - e_z(u,z)^* p .
+    \]
+  \end{qbox}
+  }
+
+  \visible<5->{
+  \begin{hlbox}
+    \textbf{Gradient.} $\nabla \hat J(z) \in Z$ is the Riesz representative of $\hat J'(z) \in Z^*$: \; $(\nabla \hat J(z), h)_Z = \hat J'(z)h$ for all $h$. It depends on the inner product of $Z$!
+  \end{hlbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+% 5c: the first-order recipe
+% ------------------------------------------------------------
+\begin{frame}{Adjoint Calculus: The Gradient Recipe}
+  \begin{hlbox}
+    \textbf{Given $z$:}
+    \begin{enumerate}
+      \item<1-> Solve the state equation \; $e(u,z) = 0$ \hfill (possibly nonlinear)
+      \item<2-> Solve the adjoint equation \; $e_u(u,z)^* p = J_u(u,z)$ \hfill (always linear)
+      \item<3-> Set \; $\hat J'(z) = J_z(u,z) - e_z(u,z)^* p$, and take its Riesz representative $\nabla \hat J(z)$.
+    \end{enumerate}
+  \end{hlbox}
+
+  \visible<4->{
+  \begin{hlbox}
+    \textbf{Model problem.} $A^* p = u - u_d$, i.e.\ $-\Delta p = u - u_d$, $p|_{\partial D} = 0$, and
+    \(
+      \hat J'(z)h = \alpha(z,h) + (p,h).
+    \)
+    Hence, in $Z = \Ltwo$,
+    \[
+      \nabla \hat J(z) = p + \alpha z \qquad \text{for every } z \in \Ltwo .
+    \]
+  \end{hlbox}
+  }
+
+  \visible<5->{
+  \begin{qbox}
+    One state solve and one linear adjoint solve give the full gradient, independent of the dimension of $Z$.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+% 5d: second-order adjoint calculus
+% ------------------------------------------------------------
+\begin{frame}[label=hessian]{Adjoint Calculus: Hessian--Vector Products}
+  \begin{hlbox}
+    \textbf{Lagrangian.} $\Lag(u,z,p) := J(u,z) - \dual{p}{e(u,z)}$, evaluated at $u = S(z)$ and the adjoint state $p$; assume $J$, $e$ are $C^2$.
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Recipe for $\hat J''(z)h$:}
+    \begin{enumerate}
+      \item Linearized state: \; $e_u\,\delta u = -e_z\,h$
+      \item Second adjoint: \; $e_u^*\,\delta p = \Lag_{uu}\,\delta u + \Lag_{uz}\,h$
+      \item Assemble: \; $\hat J''(z)h = \Lag_{zu}\,\delta u + \Lag_{zz}\,h - e_z^*\,\delta p$
+    \end{enumerate}
+    \textbf{Cost:} two linear solves per product; the Hessian is never formed.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    \textbf{Model problem.} $\Lag_{uu} = I$, $\Lag_{zz} = \alpha I$, $\Lag_{uz} = 0$: \; $\delta u = Sh$, $\delta p = S^*\delta u$, $\hat J''(z)h = \delta p + \alpha h$.
+  \end{qbox}
+  }
+  \vfill\hfill\hyperlink{adjoints}{\beamergotobutton{Details: adjoint calculus}}
+\end{frame}
+
+\end{document}
