@@ -1,0 +1,112 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  Appendix: functional-analytic details for Step 1
+% ============================================================
+\section{Appendix: Properties of the Solution Operator}
+
+% ------------------------------------------------------------
+% Step 1d: proof of linearity, boundedness, differentiability
+% ------------------------------------------------------------
+\begin{frame}[label=fadetails]{The Lax--Milgram Theorem}
+  \begin{qbox}
+    \textbf{Theorem (Lax--Milgram).} Let $V$ be a Hilbert space, $a : V \times V \to \R$ bilinear, bounded, and coercive with constant $\gamma > 0$, and $\ell \in V^*$. Then there is a unique $u \in V$ with $a(u,v) = \dual{\ell}{v}_{V^*,V}$ for all $v \in V$, and
+    \[
+      \norm{u}_V \le \gamma^{-1}\norm{\ell}_{V^*}.
+    \]
+  \end{qbox}
+
+  \begin{hlbox}
+    \textbf{Model problem.} $V = \Hzero$, $\ell = \iota z$: \; $|(z,v)_{L^2}| \le \norm{z}_{L^2}\norm{v}_{H^1}$, so $\norm{\iota z}_{H^{-1}} \le \norm{z}_{L^2}$ and $\norm{Sz}_{H^1} \le (1 + c_F^2)\norm{z}_{L^2}$.
+  \end{hlbox}
+  \par\vspace{-1.5ex}\hfill\hyperlink{Sprops<4>}{\beamerreturnbutton{Back to Step 1}}
+\end{frame}
+
+\begin{frame}{Proof: $S$ is Linear, Bounded, and Differentiable}
+  \visible<1->{
+  \begin{hlbox}
+    \textbf{Linearity.} Let $u_i = Sz_i$, $\lambda,\mu \in \R$. For all $v \in \Hzero$,
+    \[
+      a(\lambda u_1 + \mu u_2, v) = \lambda\, a(u_1,v) + \mu\, a(u_2,v) = \dual{\iota(\lambda z_1 + \mu z_2)}{v}_{H^{-1},H^1_0}.
+    \]
+    By uniqueness, $S(\lambda z_1 + \mu z_2) = \lambda S z_1 + \mu S z_2$.
+  \end{hlbox}
+  }
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Boundedness.} By the corollary, $\norm{\nabla Sz}_{L^2} \le c_F\norm{z}_{L^2}$; with linearity,
+    $\norm{\nabla(Sz_1 - Sz_2)}_{L^2} \le c_F\norm{z_1 - z_2}_{L^2}$.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{Differentiability.} For all $z,h \in \Ltwo$, linearity gives $S(z + h) - Sz - Sh = 0$. Hence $S$ is Fr\'echet differentiable with
+    \[
+      S'(z) = S \quad \text{for all } z, \qquad S'' = 0. \hfill \qed
+    \]
+  \end{hlbox}
+  }
+  \par\vspace{-1.5ex}\hfill\hyperlink{Sprops<4>}{\beamerreturnbutton{Back to Step 1}}
+\end{frame}
+
+% ------------------------------------------------------------
+% Step 1e: compactness of S
+% ------------------------------------------------------------
+\begin{frame}{Compactness of $S$}
+  \begin{qbox}
+    \textbf{Theorem (Rellich--Kondrachov).} If $D \subset \R^d$ is bounded and open, the embedding $C : \Hzero \hookrightarrow \Ltwo$ is compact.
+  \end{qbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Idea.} Extend $v$ by zero to $\R^d$: \; $\norm{v(\cdot + \xi) - v}_{L^2} \le |\xi|\, \norm{\nabla v}_{L^2}$, with supports in a fixed bounded set. Kolmogorov--Riesz gives compactness in $L^2$.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{Lemma.} The embedding $\iota : \Ltwo \to H^{-1}(D)$, $\dual{\iota z}{v}_{H^{-1},H^1_0} := (z, Cv)_{L^2}$, is compact.\\[0.5ex]
+    \emph{Proof.} $\iota = C^*\Lambda_{L^2}$. By Schauder's theorem $C^*$ is compact, and $\Lambda_{L^2}$ is an isometry. \hfill\qed
+  \end{hlbox}
+  }
+
+  \visible<4->{
+  \begin{qbox}
+    \textbf{Consequence.} $S = A^{-1} \circ \iota : \Ltwo \to \Hzero$ is compact, since $A^{-1}$ is bounded.
+  \end{qbox}
+  }
+  \par\vspace{-1.5ex}\hfill\hyperlink{Sprops<4>}{\beamerreturnbutton{Back to Step 1}}
+\end{frame}
+
+% ------------------------------------------------------------
+% Step 1f: weak-to-strong continuity
+% ------------------------------------------------------------
+\begin{frame}{Compactness of $S$: What We Actually Use}
+  \begin{qbox}
+    \textbf{Lemma.} If $z_n \weakto z$ in $\Ltwo$, then $Sz_n \to Sz$ strongly in $\Hzero$.
+  \end{qbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Step (i): $\iota$ is completely continuous.} Weakly convergent sequences are bounded, and $\iota$ is bounded and linear, so $\iota z_n \weakto \iota z$ in $H^{-1}(D)$.
+    Since $\iota$ is compact, every subsequence of $(\iota z_n)$ has a further subsequence converging strongly, necessarily to the weak limit $\iota z$. Hence $\iota z_n \to \iota z$ in $H^{-1}(D)$.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{Step (ii).} $A^{-1}$ is continuous, so $Sz_n = A^{-1}\iota z_n \to A^{-1}\iota z = Sz$ in $\Hzero$. \hfill \qed
+  \end{hlbox}
+  }
+
+  \visible<4->{
+  \begin{qbox}
+    Compactness comes from the \textbf{structure of the PDE}, not from the objective.
+  \end{qbox}
+  }
+  \par\vspace{-1.5ex}\hfill\hyperlink{Sprops<4>}{\beamerreturnbutton{Back to Step 1}}
+\end{frame}
+
+\end{document}

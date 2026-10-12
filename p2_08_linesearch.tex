@@ -1,50 +1,72 @@
 \documentclass[main.tex]{subfiles}
 \begin{document}
 % ============================================================
-%  8. Globalization: line search along the projection arc   (~10 min)
+%  8. Line search
 % ============================================================
-\section{Line Search Along the Projection Arc}\label{sec:linesearch}
+\section{Line Search}\label{sec:linesearch}
 
-\begin{frame}{The projection arc}
-  \[
-    u(s) := \Proj\big(u - s\nabla f(u)\big), \qquad s \ge 0 .
-  \]
-  \begin{itemize}
-    \item Searching along a \emph{fixed} direction $d$ with $u + sd \in \Uad$ forces tiny steps near the boundary.
-    \item The arc $s \mapsto u(s)$ bends along the boundary of $\Uad$: \alert{many constraints can become active in one step}.
-    \item Key property: $\ip{\nabla f(u)}{u - u(s)} \ge \tfrac1s\norm{u - u(s)}^2$.
-  \end{itemize}
-  \todo{TikZ picture: box, iterate, straight ray vs.\ bent projection arc}
+% ------------------------------------------------------------
+\begin{frame}{The Projection Arc}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      \begin{hlbox}
+        A fixed step needs the Lipschitz constant $L$, which is rarely known. Instead, search along the \textbf{projection arc}
+        \[
+          z(s) := P_{Z_{\rm ad}}\big(z - s\nabla\hat J(z)\big), \qquad s \ge 0 .
+        \]
+      \end{hlbox}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      \visible<2->{
+      \begin{center}
+      \begin{tikzpicture}[scale=1.15]
+        \fill[brownred!7] (0,0) rectangle (3,2);
+        \draw[muted] (0,0) rectangle (3,2);
+        \node[font=\scriptsize, text=muted] at (0.45,0.25) {$Z_{\rm ad}$};
+        % straight ray z - s grad J (leaves Z_ad)
+        \draw[dashed, muted, -{Stealth[length=2mm]}] (1.6,0.9) -- (3.8,2.22);
+        \node[font=\scriptsize, text=muted, above] at (3.55,2.22) {$z - s\nabla\hat J(z)$};
+        % projection arc: hits x = 3, then slides up to the corner
+        \draw[very thick, accent] (1.6,0.9) -- (3,1.74) -- (3,2);
+        \fill[accent] (3,2) circle (0.05);
+        \fill[black] (1.6,0.9) circle (0.05);
+        \node[font=\scriptsize, below] at (1.6,0.9) {$z$};
+        \node[font=\scriptsize, text=accent, left] at (2.6,1.62) {$z(s)$};
+      \end{tikzpicture}
+      \end{center}
+      }
+    \end{column}
+  \end{columns}
+
+  \visible<3->{
+  \begin{qbox}
+    The arc bends along the boundary of $Z_{\rm ad}$: \textbf{many bounds can become active in one step}. A search along a fixed direction would stall at the first bound.
+  \end{qbox}
+  }
 \end{frame}
 
-\begin{frame}{Armijo rule along the arc}
+% ------------------------------------------------------------
+\begin{frame}[label=armijo]{Armijo Rule Along the Arc}
   \framesubtitle{Goldstein (1964), Levitin--Polyak (1966), Bertsekas (1976)}
-  Given $\sigma \in (0,1)$, $\beta \in (0,1)$, $\bar s > 0$: choose $s_k = \beta^{m_k}\bar s$ with $m_k$ the smallest integer such that
-  \[
-    f(u_k) - f\big(u_k(s_k)\big) \;\ge\; \sigma\,\ip{\nabla f(u_k)}{u_k - u_k(s_k)}_U .
-  \]
-  Variant (e.g.\ Kelley 1999):
-  \[
-    f\big(u_k(s_k)\big) - f(u_k) \;\le\; -\frac{\sigma}{s_k}\norm{u_k - u_k(s_k)}_U^2 .
-  \]
-  \begin{itemize}
-    \item Each backtracking step costs one projection and one state solve, \emph{no} new adjoint.
-    \item Both conditions are stated in the $U$ inner product: consistent across meshes.
-  \end{itemize}
-\end{frame}
+  \begin{hlbox}
+    Given $\sigma, \beta \in (0,1)$ and $\bar s > 0$, take $s_k = \beta^{m}\bar s$ with $m \ge 0$ the smallest integer such that
+    \[
+      \hat J(z_k) - \hat J\big(z_k(s_k)\big) \;\ge\; \sigma\,\big(\nabla\hat J(z_k),\, z_k - z_k(s_k)\big)_Z .
+    \]
+  \end{hlbox}
 
-\begin{frame}{Convergence theory}
-  \begin{theorem}[Bertsekas (1976); Dunn (1981) in Hilbert space]
-    Let $\nabla f$ be Lipschitz on $\Uad$. Then the Armijo step is well defined, and every accumulation point of the projected gradient iterates is stationary.
-  \end{theorem}
-  \textbf{Dunn's contributions}
-  \begin{itemize}
-    \item Global convergence and rate estimates for projected gradient processes in Hilbert space.
-    \item Role of nondegeneracy/growth conditions at $\ub$ for linear rates.
-    \item \alert{Active set identification}: under strict complementarity the active set is identified after finitely many steps (finite dim.) \todo{state precisely the function-space version you want to use}.
-  \end{itemize}
-  \vspace{0.5ex}
-  This motivates: once the active set is known, switch to Newton on the free part.
+  \visible<2->{
+  \begin{hlbox}
+    Each trial costs one projection and one state solve, \emph{no} adjoint. The rule is stated in the inner product of $Z$, so it is consistent across meshes.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    \textbf{Theorem} (Bertsekas 1976; Dunn 1981 in Hilbert space). If $\nabla\hat J$ is Lipschitz on $Z_{\rm ad}$, the Armijo step is well defined, and every accumulation point of $(z_k)$ is stationary, also for nonconvex $\hat J$.
+  \end{qbox}
+  }
+  \vfill\hfill\hyperlink{lsdetails}{\beamergotobutton{Details}}
 \end{frame}
 
 \end{document}

@@ -1,0 +1,71 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  Appendix: spectral arguments for mesh independence
+% ============================================================
+\section{Appendix: Spectral Arguments}
+
+\begin{frame}[label=spectral]{Discrete Hessians: A Uniform Spectral Interval}
+  \begin{hlbox}
+    \textbf{Stability of Galerkin.} Let $V_h \subset \Hzero$ and $u_h = S_h z \in V_h$: \; $a(u_h, v_h) = (z, v_h)_{L^2}$ for all $v_h \in V_h$. Test with $v_h = u_h$:
+    \[
+      \norm{\nabla u_h}_{L^2}^2 = (z, u_h)_{L^2} \le \norm{z}_{L^2}\norm{u_h}_{L^2} \le c_F\norm{z}_{L^2}\norm{\nabla u_h}_{L^2}
+    \]
+    so $\norm{\nabla u_h}_{L^2} \le c_F\norm{z}_{L^2}$ and $\norm{u_h}_{L^2} \le c_F\norm{\nabla u_h}_{L^2} \le c_F^2\,\norm{z}_{L^2}$.
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    Conforming Galerkin \emph{inherits} coercivity: $\norm{CS_h}_{\mathcal{L}(L^2)} \le c_F^2$, independent of $h$.
+    So $H_h := \Lambda^{-1}(CS_h)^*\Lambda(CS_h) + \alpha I$ has $\sigma(H_h) \subset [\alpha,\, \alpha + c_F^4]$ for every mesh (for P1 controls, its matrix is $M^{-1}S_h^\top M S_h + \alpha I$).
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    Hence $q_h \le \max\{|1 - s\alpha|, |1 - s(\alpha + c_F^4)|\}$ for \emph{all} meshes.
+  \end{qbox}
+  }
+  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 7}}
+\end{frame}
+
+\begin{frame}{Spectral Convergence}
+  \begin{hlbox}
+    \textbf{Even more is true} (controls not discretized). For convex polygonal $D$, Aubin--Nitsche gives $\norm{C(S - S_h)}_{\mathcal{L}(L^2)} \le c\,h^2$, hence
+    \(
+      \norm{H - H_h}_{\mathcal{L}(L^2)} \le C' h^2 .
+    \)
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Weyl's inequality.} $H - \alpha I$ and $H_h - \alpha I$ are compact, self-adjoint, nonnegative; with eigenvalues in decreasing order, $|\lambda_k(T) - \lambda_k(T_h)| \le \norm{T - T_h}_{\mathcal{L}(L^2)}$. So
+    \[
+      |\lambda_k(H) - \lambda_k(H_h)| \le C' h^2 \qquad \text{for every } k .
+    \]
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    The discrete Hessians have asymptotically the \emph{same spectrum} as $H$; with discretized controls, the control approximation error enters as well.
+  \end{qbox}
+  }
+  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 7}}
+\end{frame}
+
+\begin{frame}[label=euclidapp]{Euclidean Hessian: The Derivation}
+  \begin{hlbox}
+    \textbf{Euclidean Hessian.} $H_E = S_h^\top M S_h + \alpha M = M H_h$, where $H_h$ represents the Hessian in the $M$-inner product. By the Rayleigh quotient bound for $H_h$ ($|\cdot|$ the Euclidean norm),
+    \[
+      x^\top H_E x = (x, H_h x)_M \in [\alpha,\, \alpha + c_F^4]\cdot x^\top M x \subset \big[\alpha\lambda_{\min}(M),\, (\alpha + c_F^4)\lambda_{\max}(M)\big]\,|x|^2 .
+    \]
+  \end{hlbox}
+
+  \begin{hlbox}
+    Hence $\mathrm{cond}(H_E) \le (1 + c_F^4/\alpha)\,\mathrm{cond}(M)$. On quasi-uniform meshes $\mathrm{cond}(M)$ is bounded (only the $h^d$ scaling hurts); on graded meshes $\mathrm{cond}(M) \sim (h_{\max}/h_{\min})^d$. The factor is attained asymptotically: for oscillatory $x$, $\norm{CS_h x}_{L^2}^2 \ll \alpha\, x^\top M x$, so $H_E \approx \alpha M$ there.
+  \end{hlbox}
+  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 7}}
+\end{frame}
+
+\end{document}

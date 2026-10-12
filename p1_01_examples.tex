@@ -23,7 +23,7 @@
             u = 0 \;\;\text{on } \partial D,
     \endaligned
   \]
-  It is reasonable to assume that $z$ is not arbitrarily large or small. Take $z \in Z_{\rm ad}$ with
+  It is reasonable to assume that $z$ is bounded. Take $z \in Z_{\rm ad}$ with
   \[
     Z_{\rm ad} := \{ z \in \Ltwo : z_a \le z \le z_b \text{ a.e.\ in } D \}.
   \]
@@ -34,7 +34,7 @@
   \begin{hlbox}
   Find $z \in Z_{\rm ad}$ such that $u$ is close to $u_d$. An objective function could be:
         \[
-    J(u,z) := \frac12 \norm{u - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2
+    J(u,z) := \frac12 \norm{u - u_d}_{L^2}^2 + \frac{\alpha}{2}\norm{z}_{L^2}^2
   \]
   \end{hlbox}
   }
@@ -52,7 +52,7 @@
   \begin{hlbox}
   The PDE changes to reflect the dynamics ($Q_{T} := D \times (0,T)$),
   \[
-    \partial_t u - \Delta u = z \;\;\text{in } Q, \qquad u = 0 \;\;\text{on } \partial D \times(0,T), \qquad u(0) = u_0.
+    \partial_t u - \Delta u = z \;\;\text{in } Q_T, \qquad u = 0 \;\;\text{on } \partial D \times(0,T), \qquad u(0) = u_0.
   \]
   We now have $Z_{\rm ad} := \{ z \in L^2(Q_T) : z_a \le z \le z_b \text{ a.e.\ in } Q_{T} \}$.
     \end{hlbox}
@@ -61,7 +61,7 @@
   \begin{hlbox}
   The objective is now to find $z \in Z_{\rm ad}$ such that $u(T)$ is close to $u_{T}$
         \[
-    J(u,z) :=  \frac{1}{2}\norm{u(T) - u_T}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{L^2(Q_{T})}^2
+    J(u,z) :=  \frac{1}{2}\norm{u(T) - u_T}_{L^2}^2 + \frac{\alpha}{2}\norm{z}_{L^2(Q_{T})}^2
   \]
   \end{hlbox}
 }
@@ -84,8 +84,8 @@
   \begin{hlbox}
    The stationary concentration $u$ solves the reaction--diffusion equation
    \[
-     -\nabla\cdot\big(\kappa(u)\nabla u\big) + z\,R(u) = f \;\;\text{in } \Omega,\qquad
-     u = 0 \;\;\text{on } \partial\Omega,
+     -\nabla\cdot\big(\kappa(u)\nabla u\big) + z\,R(u) = f \;\;\text{in } D,\qquad
+     u = 0 \;\;\text{on } \partial D,
    \]
    feed $f$, diffusivity $\kappa(u) \ge \kappa_0 > 0$, nondecreasing rate law, e.g., $R(u) = \frac{u}{1+u}$ or $u^3$.
   \end{hlbox}
@@ -96,7 +96,7 @@
   Catalyst bounds and similar objective:
   \[
     Z_{\rm ad} := \{ 0 \le z_a \le z \le z_b \text{ a.e.} \}, \qquad
-    J(u,z) := \tfrac12 \norm{u - u_d}_{\Ltwo}^2 + \tfrac{\alpha}{2}\norm{z}_{\Ltwo}^2 .
+    J(u,z) := \tfrac12 \norm{u - u_d}_{L^2}^2 + \tfrac{\alpha}{2}\norm{z}_{L^2}^2 .
   \]
   \end{hlbox}
   }
@@ -111,32 +111,27 @@
 % ------------------------------------------------------------
 \subsection{A problem under uncertainty}
 \begin{frame}{Example 4: Optimization under Uncertainty}
+  \framesubtitle{See, e.g., Kouri--Surowiec (SIOPT 2016; SIAM/ASA JUQ 2018)}
   \visible<2->{
   \begin{qbox}
-  Suppose the diffusivity $\kappa(u)$ has been estimated from data and is only understandable through realizations of a random field $\kappa : D \times \Omega \to \mathbb R$. What changes?
+  Suppose the diffusivity is only known through realizations of a random field $\kappa : D \times \Omega \to \mathbb R$ on a probability space $(\Omega,\mathcal{F},\mathbb P)$. What changes?
   \end{qbox}
   }
 
 \visible<3->{
 \begin{hlbox}
-    We now view the PDE \textbf{almost surely} wrt to a probability measure $\mathbb P$:
+    The PDE now holds \textbf{almost surely}:
       \[
-    -\nabla\cdot\big(\kappa(\cdot,\omega)\nabla u(\omega)\big) + z\,R(u) = f \;\;\text{in } D, \qquad u(\omega) = 0 \;\;\text{on } \partial D, \quad \mathbb P-\text{a.s.}
+    -\nabla\cdot\big(\kappa(\cdot,\omega)\nabla u(\omega)\big) + z\,R(u(\omega)) = f \;\;\text{in } D, \quad u(\omega) = 0 \;\;\text{on } \partial D, \quad \mathbb P\text{-a.s.}
   \]
 \end{hlbox}
 }
 
 \visible<4->{
 \begin{hlbox}
-    While $z$ is still deterministic, $u$ is now a random field in $L^p(\Omega,\mathcal{F},\mathbb P; H^1_0(D))$.
-\end{hlbox}
-}
-
-\visible<5->{
-\begin{hlbox}
-The objective $J(u(\omega),z)$ is now implicitly \textbf{random}. We scalarize with a \textbf{risk measure} $\mathcal{R}$ (mean, average-value-at-risk, ...):
+    $z$ is deterministic, but $u \in L^p(\Omega,\mathcal{F},\mathbb P; \Hzero)$ is random, so the objective is \textbf{random}. Scalarize with a \textbf{risk measure} $\mathcal{R}$ (mean, average value-at-risk, \dots):
   \[
-J(u,z) := \mathcal{R}\Big[\tfrac12 \norm{u(\cdot) - u_d}_{\Ltwo}^2\Big] + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2
+J(u,z) := \mathcal{R}\Big[\tfrac12 \norm{u(\omega) - u_d}_{L^2}^2\Big] + \frac{\alpha}{2}\norm{z}_{L^2}^2 .
   \]
 \end{hlbox}
 }
@@ -169,36 +164,13 @@ J(u,z) := \mathcal{R}\Big[\tfrac12 \norm{u(\cdot) - u_d}_{\Ltwo}^2\Big] + \frac{
   \begin{qbox}
   If the PDE has a unique solution $u = S(z)$ for each $z$, we can eliminate the state:
   \(
-    \min_{z \in Z_{\rm ad}} j(z) := J(S(z),z).
+    \min_{z \in Z_{\rm ad}} \hat J(z) := J(S(z),z).
   \) This is called the \textbf{reduced formulation}.
   \end{qbox}
   }
 \end{frame}
 
-\begin{frame}{Common Structure}
-  \begin{center}
-  \small
-  \renewcommand{\arraystretch}{1.35}
-  \begin{tabular}{@{}lllll@{}}
-    \toprule
-    & 1: Poisson & 2: Heat & 3: Catalyst & 4: Uncertainty \\
-    \midrule
-    State space & $\Hzero$ & $\WT$ & $\Hzero$ & $L^p_{\mathbb{P}}(\Omega;\Hzero)$ \\
-    Control space & $\Ltwo$ & $L^2(Q_T)$ & $\Ltwo$ & $\Ltwo$ \\
-    Map $z \mapsto u$ & linear & affine & nonlinear & nonlinear, per $\omega$ \\
-    Objective & tracking & terminal & tracking & risk of tracking \\
-    Adjoint & elliptic & backward parabolic & linearized elliptic & one per $\omega$ \\
-    Reduced problem & convex & convex & nonconvex & nonconvex \\
-    \bottomrule
-  \end{tabular}
-  \end{center}
-  \vspace{1ex}
-  \visible<2->{
-  \begin{qbox}
-   Does an optimal control exist? How do we characterize it? How do we compute it?
-  \end{qbox}
-  }
-\end{frame}
+
 
 % ------------------------------------------------------------
 \subsection{Roadmap}

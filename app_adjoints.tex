@@ -51,7 +51,7 @@
 
   \begin{hlbox}
     \begin{itemize}
-      \item Second derivatives of $e$ enter only through $\dual{p}{e''(u,z)[\cdot,\cdot]}$.
+      \item Second derivatives of $e$ enter only through $\dual{p}{e''(u,z)[\cdot,\cdot]}_{W^*,W}$.
       \item The Hessian is dense and $m \times m$: never form it. Newton--Krylov methods only need $\hat J''(z)h$.
     \end{itemize}
   \end{hlbox}
@@ -64,9 +64,9 @@
   \end{hlbox}
 
   \begin{hlbox}
-    \textbf{Nonconvex case} (Example 3): for box constraints, require $\hat J''(\bar z)[h,h] \ge \delta\norm{h}_{\Ltwo}^2$, $\delta > 0$, on the critical cone
+    \textbf{Nonconvex case} (Example 3): for box constraints, require $\hat J''(\bar z)[h,h] \ge \delta\norm{h}_{L^2}^2$, $\delta > 0$, on the critical cone
     \[
-      C(\bar z) = \{ h : h \ge 0 \text{ where } \bar z = z_a,\; h \le 0 \text{ where } \bar z = z_b,\; h = 0 \text{ where } \nabla\hat J(\bar z) \ne 0 \}.
+      \mathcal{C}(\bar z) = \{ h : h \ge 0 \text{ where } \bar z = z_a,\; h \le 0 \text{ where } \bar z = z_b,\; h = 0 \text{ where } \nabla\hat J(\bar z) \ne 0 \}.
     \]
   \end{hlbox}
 
@@ -78,7 +78,7 @@
 
 \begin{frame}{Adjoint Calculus: The Time-Dependent Problem}
   \begin{hlbox}
-    \textbf{Example 2.} For $J(u,z) = \tfrac12\norm{u(T) - u_T}_{\Ltwo}^2 + \tfrac{\alpha}{2}\norm{z}_{L^2(Q_T)}^2$, the adjoint runs \textbf{backward in time}:
+    \textbf{Example 2.} For $J(u,z) = \tfrac12\norm{u(T) - u_T}_{L^2}^2 + \tfrac{\alpha}{2}\norm{z}_{L^2(Q_T)}^2$, the adjoint runs \textbf{backward in time}:
     \[
       -\partial_t p - \Delta p = 0 \;\;\text{in } Q_T, \qquad p = 0 \;\;\text{on } \partial D\times(0,T), \qquad p(T) = u(T) - u_T .
     \]
@@ -87,7 +87,7 @@
 
   \begin{hlbox}
     \begin{itemize}
-      \item The adjoint needs the \emph{whole} forward trajectory $u(t)$: store it, or recompute it (checkpointing).
+      \item Here only $u(T)$ enters. With tracking over $Q_T$ or a nonlinear PDE, the adjoint needs the \emph{whole} forward trajectory: store it, or recompute it (checkpointing).
       \item Optimize-then-discretize and discretize-then-optimize give the same discrete gradient only for compatible time-stepping schemes.
     \end{itemize}
   \end{hlbox}

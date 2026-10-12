@@ -1,0 +1,285 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  7. The projected gradient method
+%     algorithm -> which gradient -> which projection -> mesh independence
+% ============================================================
+\section{The Projected Gradient Method}
+
+% ------------------------------------------------------------
+% The algorithm first
+% ------------------------------------------------------------
+\begin{frame}[label=pgalg]{The Projected Gradient Method}
+  \begin{hlbox}
+    \textbf{Fixed-point form.} For any $s > 0$: \; $\bar z$ satisfies the VI \;$\Longleftrightarrow$\; $\bar z = P_{Z_{\rm ad}}\big(\bar z - s\nabla\hat J(\bar z)\big)$.\\[0.3ex]
+    {\small Since $w = P_{Z_{\rm ad}}(v) \Leftrightarrow (v - w, z - w)_Z \le 0$ for all $z \in Z_{\rm ad}$; take $v = \bar z - s\nabla\hat J(\bar z)$, $w = \bar z$.}
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Algorithm.} Given $z_0 \in Z_{\rm ad}$, for $k = 0, 1, 2, \dots$
+    \begin{enumerate}
+      \item Solve the state and adjoint equations; form $\nabla \hat J(z_k)$.
+      \item Stop if $\norm{z_k - P_{Z_{\rm ad}}(z_k - \nabla\hat J(z_k))}_Z \le \varepsilon$.
+      \item Choose a step $s_k > 0$ (fixed, or by line search: Section~\ref{sec:linesearch}).
+      \item Set $z_{k+1} = P_{Z_{\rm ad}}\big(z_k - s_k\nabla\hat J(z_k)\big)$.
+    \end{enumerate}
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    \textbf{Three questions:} Which gradient? Which projection after discretization? Does it converge independently of the mesh?
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{Which Gradient? Derivative versus Gradient}
+  \begin{hlbox}
+    $\hat J'(z) \in Z^*$ is a bounded linear functional. The \textbf{gradient} $\nabla_Z \hat J(z) \in Z$ is its Riesz representative, $\nabla_Z \hat J(z) = \Lambda_Z^{-1}\hat J'(z)$ with $\Lambda_Z : Z \to Z^*$:
+    \[
+      (\nabla_Z \hat J(z), h)_Z = \hat J'(z)h \qquad \forall h \in Z .
+    \]
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \begin{itemize}
+      \item $Z = \Ltwo$: \; $\Lambda_{L^2}^{-1}\hat J'(z) = Cp + \alpha z$, the same function as $p + \alpha z$.
+      \item $Z = \Hzero$ with $(v,w)_Z := (\nabla v, \nabla w)_{L^2}$: \; $g := \nabla_{H^1_0} \hat J(z)$ solves $-\Delta g = p + \alpha z$, \; $g|_{\partial D} = 0$.
+    \end{itemize}
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    The steepest descent direction $-\nabla_Z \hat J(z)$ depends on $Z$: changing the inner product changes the method.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{Example: A Derivative That Is Not a Gradient}
+  \begin{columns}[T]
+    \begin{column}{0.56\textwidth}
+      \begin{hlbox}
+        $D = (0,1)$, $M = (\tfrac13, \tfrac23)$, $\norm{v}_{H^1_0} := \norm{v'}_{L^2}$: \; $\ell(v) := (\chi_M, v)_{L^2}$ is bounded:
+        $|\ell(v)| \le \norm{v}_{L^2} \le c_F\norm{v}_{H^1_0}$.
+      \end{hlbox}
+
+      \visible<2->{
+      \begin{hlbox}
+        But $\chi_M \notin \Hzero$: if $v \in H^1(0,1)$,
+        \(
+          |v(x) - v(y)| = \big|\textstyle\int_y^x v'\big| \le |x - y|^{1/2}\norm{v'}_{L^2},
+        \)
+        so $v$ is continuous.
+      \end{hlbox}
+      }
+
+      \visible<3->{
+      \begin{hlbox}
+        \textbf{Riesz map:} $g = \Lambda_{H^1_0}^{-1}\ell$ solves \; $-g'' = \chi_M$, \; $g(0) = g(1) = 0$.
+      \end{hlbox}
+      }
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      \begin{center}
+      \begin{tikzpicture}[xscale=4.0, yscale=1.6]
+        \draw[-{Stealth[length=2mm]}, muted] (-0.03,0) -- (1.08,0) node[right, font=\footnotesize] {$x$};
+        \draw[-{Stealth[length=2mm]}, muted] (0,-0.08) -- (0,1.25);
+        \node[below, font=\scriptsize] at (0,0) {$0$};
+        \node[below, font=\scriptsize] at (1,0) {$1$};
+        \draw[very thick, muted!80] (0,0) -- (1/3,0);
+        \draw[very thick, muted!80] (1/3,1) -- (2/3,1);
+        \draw[very thick, muted!80] (2/3,0) -- (1,0);
+        \draw[dashed, muted!60] (1/3,0) -- (1/3,1);
+        \draw[dashed, muted!60] (2/3,0) -- (2/3,1);
+        \node[font=\footnotesize, text=muted] at (0.5,1.14) {$\chi_M$};
+        \visible<3->{
+        \draw[very thick, accent, domain=0:1/3, samples=20] plot (\x, {12*(\x/6)});
+        \draw[very thick, accent, domain=1/3:2/3, samples=30] plot (\x, {12*(-\x*\x/2 + \x/2 - 1/18)});
+        \draw[very thick, accent, domain=2/3:1, samples=20] plot (\x, {12*((1-\x)/6)});
+        \node[font=\footnotesize, text=accent] at (0.5,0.6) {$12\,g$};
+        }
+      \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+
+  \visible<4->{
+  \begin{qbox}
+    Pulling a derivative back to the primal space is a \textbf{PDE solve}.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{The Discrete Picture}
+  \begin{hlbox}
+    \begin{itemize}
+      \item<1-> P1 elements: $z_h = \sum_{i} z_i\varphi_i \leftrightarrow z \in \R^m$; \; $M_{ij} = (\varphi_i,\varphi_j)_{L^2}$, \; $K_{ij} = (\nabla\varphi_i,\nabla\varphi_j)_{L^2}$.
+      \item<2-> Derivative vector $r_i := \hat J'(z_h)\varphi_i$: a discrete \emph{functional}, not yet a gradient.
+      \item<3-> For an inner product $(v,w)_W := v^\top W w$, the $W$-gradient solves $(g,v)_W = r^\top v$, i.e.\ $g = W^{-1}r$:
+    \end{itemize}
+    \visible<3->{
+    \[
+      \underbrace{g = r}_{W = I \text{ (Euclidean)}}, \qquad \underbrace{g = M^{-1}r}_{W = M\ (L^2)}, \qquad \underbrace{g = K^{-1}r}_{W = K\ (H^1_0)} .
+    \]
+    }
+  \end{hlbox}
+
+  \visible<4->{
+  \begin{qbox}
+    $M \sim h^{d}$ on quasi-uniform meshes, so $r = Mg \sim h^{d}g$: the Euclidean gradient is a \emph{mesh-dependent rescaling} of the $L^2$ gradient.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{Which Projection? The Discrete Setting}
+  \begin{hlbox}
+    \textbf{Setting.} P1 controls $z_h = \sum_i z_i \varphi_i$ with nodal bounds, $Z_{{\rm ad},h} := \{ z \in \R^m : z_a \le z \le z_b \}$.
+    The $L^2$-consistent projected gradient step is
+    \[
+      z_{k+1} = \argmin_{w \in Z_{{\rm ad},h}} \norm{w - v_k}_M^2, \qquad v_k := z_k - s\,M^{-1} r_k .
+    \]
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Not componentwise.} $\norm{w - v}_M^2 = \sum_{i,j} M_{ij}(w_i - v_i)(w_j - v_j)$ couples neighboring nodes: every step is a QP. Clipping $\max\{z_a, \min\{z_b, v\}\}$ is the \emph{Euclidean} projection, so mixing it with $M^{-1}r$ mixes two inner products.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    \textbf{Why a diagonal helps.} For $W = \mathrm{diag}(\omega_i)$, $\omega_i > 0$: \; $\norm{w - v}_W^2 = \sum_i \omega_i (w_i - v_i)^2$ is \emph{separable}. Each term is minimized independently, so the $W$-projection onto the box is clipping. This holds for P0 controls ($M$ diagonal) and for lumped P1.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{Mass Lumping in Practice}
+  \begin{hlbox}
+    \textbf{Lumped mass matrix} $M_L := \mathrm{diag}(M\mathbf{1})$, $(M_L)_{ii} = \int_D \varphi_i \dd x$. Use $M_L$ for the geometry of the control space: the Riesz map $g = M_L^{-1}r$, the projection norm, and the Tikhonov term $\tfrac{\alpha}{2} z^\top M_L z$. Keep $M$ where $z$ enters the state equation as a load, $Mz$.
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Resulting step:} \; $g_k = M_L^{-1}M p_k + \alpha z_k$, \;\; $z_{k+1} = \max\{z_a, \min\{z_b, z_k - s\,g_k\}\}$ componentwise.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{Still consistent.} On P1 simplices, $\tfrac{1}{d+2}M_L \le M \le M_L$ element by element, hence globally, uniformly in $h$. So $\norm{\cdot}_{M_L} \simeq \norm{\cdot}_{L^2}$, and the analysis below applies.
+  \end{hlbox}
+  }
+
+  \visible<4->{
+  \begin{qbox}
+    Discrete projection formula: \; $\bar z_h = \max\{z_a, \min\{z_b, -\tfrac{1}{\alpha} M_L^{-1}M \bar p_h\}\}$.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{Mesh Independent? A Contraction Estimate}
+  \begin{qbox}
+    \textbf{Theorem} (model problem, $\alpha > 0$). Let $H := \Lambda^{-1}\hat J'' = \Lambda^{-1}(CS)^*\Lambda(CS) + \alpha I \in \mathcal{L}(L^2)$ be the Hessian and $L := \alpha + \norm{CS}_{\mathcal{L}(L^2)}^2$, the Lipschitz constant of $\nabla\hat J$. For a fixed step $s \in (0, 2/L)$, the projected gradient iterates satisfy
+    \[
+      \norm{z_{k+1} - \bar z}_{L^2} \le q\,\norm{z_k - \bar z}_{L^2}, \qquad q := \max\{|1 - s\alpha|,\, |1 - sL|\} < 1 .
+    \]
+  \end{qbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{Proof.} $\bar z = P_{Z_{\rm ad}}(\bar z - s\nabla\hat J(\bar z))$, $P_{Z_{\rm ad}}$ is nonexpansive, and $\nabla\hat J$ is affine with $\nabla \hat J(z_k) - \nabla \hat J(\bar z) = H(z_k - \bar z)$:
+    \[
+      \norm{z_{k+1} - \bar z}_{L^2} \le \norm{(I - sH)(z_k - \bar z)}_{L^2} \le \norm{I - sH}_{\mathcal{L}(L^2)}\,\norm{z_k - \bar z}_{L^2} .
+    \]
+    It remains to show $\norm{I - sH}_{\mathcal{L}(L^2)} \le q$ \; (next slide).
+  \end{hlbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}{Spectral Bounds Decide the Rate}
+  \begin{hlbox}
+    \textbf{(i)} $(Hv, w)_{L^2} = (CSv, CSw)_{L^2} + \alpha(v,w)_{L^2}$: $H$ is self-adjoint, and $(Hv,v)_{L^2} \in [\alpha, L]\cdot\norm{v}_{L^2}^2$.
+  \end{hlbox}
+
+  \begin{columns}[c]
+    \begin{column}{0.66\textwidth}
+      \visible<2->{
+      \begin{hlbox}
+        \textbf{(ii)} $T := I - sH$ is \emph{self-adjoint}, so $\norm{T}_{\mathcal{L}(L^2)} = \sup_{\norm{v}_{L^2}=1} |(Tv, v)_{L^2}|$. By (i):
+        \[
+          \begin{aligned}
+            (Tv, v)_{L^2} &\in [1 - sL,\; 1 - s\alpha]\cdot\norm{v}_{L^2}^2,\\
+            \norm{I - sH}_{\mathcal{L}(L^2)} &\le \max\{|1 - sL|, |1 - s\alpha|\} = q . \;\; \qed
+          \end{aligned}
+        \]
+      \end{hlbox}
+      }
+    \end{column}
+    \begin{column}{0.31\textwidth}
+      \visible<3->{
+      \begin{center}
+      \begin{tikzpicture}[xscale=1.45, yscale=1.4]
+        \def\s{0.8} \def\a{0.3} \def\L{2.0}
+        % interval [alpha, L]
+        \fill[brownred!10] (\a,0) rectangle (\L,1.15);
+        \draw[-{Stealth[length=2mm]}, muted] (-0.05,0) -- (2.35,0) node[right, font=\footnotesize] {$\lambda$};
+        \draw[-{Stealth[length=2mm]}, muted] (0,-0.05) -- (0,1.3);
+        \node[left, font=\scriptsize] at (0,1) {$1$};
+        % full V in grey
+        \draw[thick, muted!70, domain=0:2.25, samples=60] plot (\x, {abs(1 - \s*\x)});
+        % V over [alpha, L] in accent
+        \draw[very thick, accent, domain=\a:\L, samples=60] plot (\x, {abs(1 - \s*\x)});
+        \fill[accent] (\a, {abs(1-\s*\a)}) circle (0.035);
+        \fill[accent] (\L, {abs(1-\s*\L)}) circle (0.035);
+        % q level
+        \draw[dashed, accent] (0, {abs(1-\s*\a)}) -- (\L, {abs(1-\s*\a)});
+        \node[left, font=\scriptsize, text=accent] at (0, {abs(1-\s*\a)}) {$q$};
+        \node[below, font=\scriptsize] at (\a,0) {$\alpha$};
+        \node[below, font=\scriptsize] at (\L,0) {$L$};
+        \node[below, font=\scriptsize, text=muted] at (1/\s,0) {$\tfrac{1}{s}$};
+      \end{tikzpicture}
+      \end{center}
+      }
+    \end{column}
+  \end{columns}
+
+  \visible<4->{
+  \begin{qbox}
+    The rate depends \emph{only} on the bounds $[\alpha, L]$ for the Hessian's quadratic form. Mesh independence: bound them \emph{uniformly in $h$}. Without self-adjointness, the norm can far exceed the spectral radius.
+  \end{qbox}
+  }
+\end{frame}
+
+% ------------------------------------------------------------
+\begin{frame}[label=disch]{Discrete Hessians Inherit the Spectral Interval}
+  \begin{hlbox}
+    \textbf{Galerkin stability.} For conforming FE, $V_h \subset \Hzero$, the discrete solution operator inherits the coercivity of $a$: \; $\norm{CS_h}_{\mathcal{L}(L^2)} \le c_F^2$, \emph{independent of $h$}.
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    Hence the discrete Hessian $H_h = M^{-1}S_h^\top M S_h + \alpha I$ has $\sigma(H_h) \subset [\alpha,\, \alpha + c_F^4]$ for every mesh, and $q_h$ is bounded uniformly in $h$.
+    Moreover, the eigenvalues of $H_h$ converge to those of $H$ as $h \to 0$.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{qbox}
+    The discrete iteration converges like the infinite-dimensional one: \textbf{mesh independence}.
+    With Euclidean gradients, the Hessian is $M H_h$ and picks up $\mathrm{cond}(M)$: \textbf{formulate in $Z$, then discretize}.
+  \end{qbox}
+  }
+  \vfill\hfill\hyperlink{spectral}{\beamergotobutton{Derivations}}\;\hyperlink{euclidapp}{\beamergotobutton{Euclidean case}}
+\end{frame}
+
+\end{document}

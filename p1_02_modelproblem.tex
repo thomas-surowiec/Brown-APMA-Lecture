@@ -7,29 +7,8 @@
 
 
 
-\begin{frame}{Return to Example 1}
-  \framesubtitle{See, e.g., Lions (1971), Tr\"oltzsch (2010)}
-  \vspace*{\fill}
-  \begin{hlbox}
-  \[
-    \begin{aligned}
-      &\min_{u,z}\; J(u,z) := \frac12 \norm{u - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2
-        \;\;\text{over } (u,z) \in \Hzero \times Z_{\rm ad}\\[1ex]
-      &\text{subject to}\\[0.5ex]
-      &\qquad\qquad
-      \begin{aligned}
-        -\Delta u &= z \;\;\text{in } D,\\
-               u &= 0 \;\;\text{on } \partial D.
-      \end{aligned}
-    \end{aligned}
-  \]
-  \end{hlbox}
-  \vspace*{\fill}
-\end{frame}
 
-% ------------------------------------------------------------
-% Step 1a: from strong to weak form
-% ------------------------------------------------------------
+
 \begin{frame}{Step 1: The State Equation}
   \begin{overlayarea}{\textwidth}{2.6cm}
   \only<1>{
@@ -45,9 +24,9 @@
   }
   \only<2->{
   \begin{hlbox}
-    \textbf{Weak form.} Multiply by $v \in \Hzero$ and integrate by parts. Find $u \in \Hzero$ such that
+    \textbf{Weak form.} Multiply by $v \in \Hzero$ and integrate by parts: find $u \in \Hzero$ with
     \[
-      \int_D \nabla u \cdot \nabla v \dd x = \int_D z\, v \dd x \qquad \forall v \in \Hzero .
+      a(u,v) := \int_D \nabla u \cdot \nabla v \dd x = (z,v)_{L^2} \qquad \forall v \in \Hzero .
     \]
   \end{hlbox}
   }
@@ -55,149 +34,44 @@
 
   \visible<3->{
   \begin{hlbox}
-    Define the bilinear form $a : \Hzero \times \Hzero \to \R$ and the $L^2$ inner product
+    \textbf{Operator form.} With $A : \Hzero \to H^{-1}(D)$, $\dual{Au}{v}_{H^{-1},H^1_0} := a(u,v)$, and the load map $\iota : \Ltwo \to H^{-1}(D)$, $\dual{\iota z}{v}_{H^{-1},H^1_0} := (z,v)_{L^2}$:
     \[
-      a(u,v) := \int_D \nabla u \cdot \nabla v \dd x, \qquad (z,v) := \int_D z\, v \dd x .
+      Au = \iota z \quad \text{in } H^{-1}(D).
     \]
-    The weak form reads: find $u \in \Hzero$ with \; $a(u,v) = (z,v)$ \; for all $v \in \Hzero$.
+    {\small Subscripts drop the domain: $\norm{\cdot}_{L^2} := \norm{\cdot}_{L^2(D)}$, etc.}
   \end{hlbox}
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 1b: properties of a and the operator A
-% ------------------------------------------------------------
-\begin{frame}{Step 1: The State Equation}
+\begin{frame}[label=Sprops]{Step 1: Well-Posedness and the Solution Operator}
   \begin{hlbox}
-    \textbf{Properties of $a$.} By Cauchy--Schwarz and Friedrichs' inequality $\norm{v}_{\Ltwo} \le c_F \norm{\nabla v}_{\Ltwo}$, for all $u,v \in \Hzero$:
+    \textbf{$a$ is bounded and coercive} (Friedrichs: $\norm{v}_{L^2} \le c_F\norm{\nabla v}_{L^2}$):
     \[
-      \begin{aligned}
-        |a(u,v)| &\le \norm{u}_{\Hone}\norm{v}_{\Hone} && \text{(bounded)},\\
-        a(v,v) &= \norm{\nabla v}_{\Ltwo}^2 \ge \gamma \norm{v}_{\Hone}^2, \quad \gamma := (1 + c_F^2)^{-1} && \text{(coercive)}.
-      \end{aligned}
+      |a(u,v)| \le \norm{u}_{H^1}\norm{v}_{H^1}, \qquad a(v,v) \ge \gamma\norm{v}_{H^1}^2, \quad \gamma := (1 + c_F^2)^{-1}.
     \]
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    Equivalently, $A : \Hzero \to H^{-1}(D)$, $\dual{Au}{v} := a(u,v)$, is a bounded, coercive linear operator, and the state equation reads
+    \textbf{Lax--Milgram:} for every $z \in \Ltwo$ there is a unique $u \in \Hzero$, and $\norm{u}_{H^1} \le \gamma^{-1}\norm{z}_{L^2}$. So
     \[
-      Au = z \quad \text{in } H^{-1}(D).
-    \]
-  \end{hlbox}
-  }
-\end{frame}
-
-% ------------------------------------------------------------
-% Step 1c: Lax--Milgram and the solution operator
-% ------------------------------------------------------------
-\begin{frame}{Step 1: Lax--Milgram and the Solution Operator}
-  \begin{qbox}
-    \textbf{Theorem (Lax--Milgram).} Let $H$ be a Hilbert space, $a$ bounded and coercive on $H$ with constant $\gamma$, and $\ell \in H^*$. Then there is a unique $u \in H$ with $a(u,v) = \ell(v)$ for all $v \in H$, and $\norm{u}_H \le \gamma^{-1}\norm{\ell}_{H^*}$.
-  \end{qbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Corollary.} Take $H = \Hzero$, $\ell(v) := (z,v)$, so $\norm{\ell}_{H^*} \le \norm{z}_{\Ltwo}$. For every $z \in \Ltwo$ there is a unique weak solution $u \in \Hzero$, and
-    \[
-      \norm{u}_{\Hone} \le (1 + c_F^2)\, \norm{z}_{\Ltwo}.
+      S := A^{-1}\iota : \Ltwo \to \Hzero \quad \text{is linear and bounded, with } S'(z) = S .
     \]
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{hlbox}
-    This defines the \textbf{solution operator} $S : \Ltwo \to \Hzero$, $z \mapsto u = Sz$.\\[0.5ex]
-    \textbf{Claim:} $S$ is linear, bounded, Fr\'echet differentiable, and compact.
-  \end{hlbox}
-  }
-\end{frame}
-
-% ------------------------------------------------------------
-% Step 1d: proof of linearity, boundedness, differentiability
-% ------------------------------------------------------------
-\begin{frame}{Proof: $S$ is Linear, Bounded, and Differentiable}
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Linearity.} Let $u_i = Sz_i$, $\lambda,\mu \in \R$. For all $v \in \Hzero$,
-    \[
-      a(\lambda u_1 + \mu u_2, v) = \lambda\, a(u_1,v) + \mu\, a(u_2,v) = (\lambda z_1 + \mu z_2, v).
-    \]
-    By uniqueness, $S(\lambda z_1 + \mu z_2) = \lambda S z_1 + \mu S z_2$.
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{hlbox}
-    \textbf{Boundedness.} By the corollary, $\norm{Sz}_{\Hone} \le (1 + c_F^2)\norm{z}_{\Ltwo}$; with linearity,
-    $\norm{Sz_1 - Sz_2}_{\Hone} \le (1 + c_F^2)\norm{z_1 - z_2}_{\Ltwo}$.
-  \end{hlbox}
-  }
-
-  \visible<4->{
-  \begin{hlbox}
-    \textbf{Differentiability.} For all $z,h \in \Ltwo$, linearity gives $S(z + h) - Sz - Sh = 0$. Hence $S$ is Fr\'echet differentiable with
-    \[
-      S'(z) = S \quad \text{for all } z, \qquad S'' = 0. \hfill \qed
-    \]
-  \end{hlbox}
-  }
-\end{frame}
-
-% ------------------------------------------------------------
-% Step 1e: compactness of S
-% ------------------------------------------------------------
-\begin{frame}{Compactness of $S$}
-  \begin{qbox}
-    \textbf{Theorem (Rellich--Kondrachov).} If $D \subset \R^d$ is bounded and open, the embedding $E : \Hzero \hookrightarrow \Ltwo$ is compact.
-  \end{qbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Idea.} Extend $v$ by zero to $\R^d$. Then $\norm{v(\cdot + h) - v}_{L^2} \le |h|\, \norm{\nabla v}_{L^2}$ uniformly on bounded sets, with supports in a fixed bounded set: the Kolmogorov--Riesz criterion gives compactness in $L^2$.
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{hlbox}
-    \textbf{Lemma.} The embedding $\iota : \Ltwo \to H^{-1}(D)$, $\dual{\iota z}{v} := (z, Ev)$, is compact.\\[0.5ex]
-    \emph{Proof.} Identifying $\Ltwo$ with its dual, $\iota = E^*$. By Schauder's theorem, the adjoint of a compact operator is compact. \hfill\qed
+    \textbf{Compactness:} $\iota$ is compact (Rellich--Kondrachov and Schauder), so $S$ is compact.
   \end{hlbox}
   }
 
   \visible<4->{
   \begin{qbox}
-    \textbf{Consequence.} $S = A^{-1} \circ \iota : \Ltwo \to \Hzero$ is compact, since $A^{-1}$ is bounded.
+    \textbf{Key consequence.} $z_n \weakto z$ in $\Ltwo$ $\Rightarrow$ $Sz_n \to Sz$ in $\Hzero$.
   \end{qbox}
   }
-\end{frame}
-
-% ------------------------------------------------------------
-% Step 1f: weak-to-strong continuity
-% ------------------------------------------------------------
-\begin{frame}{Compactness of $S$: What We Actually Use}
-  \begin{qbox}
-    \textbf{Lemma.} If $z_n \weakto z$ in $\Ltwo$, then $Sz_n \to Sz$ strongly in $\Hzero$.
-  \end{qbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Step (i): $\iota$ is completely continuous.} Weakly convergent sequences are bounded, and $\iota$ is bounded and linear, so $\iota z_n \weakto \iota z$ in $H^{-1}(D)$.
-    Since $\iota$ is compact, every subsequence of $(\iota z_n)$ has a further subsequence converging strongly, necessarily to the weak limit $\iota z$. Hence $\iota z_n \to \iota z$ in $H^{-1}(D)$.
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{hlbox}
-    \textbf{Step (ii).} $A^{-1}$ is continuous, so $Sz_n = A^{-1}\iota z_n \to A^{-1}\iota z = Sz$ in $\Hzero$. \hfill \qed
-  \end{hlbox}
-  }
-
-  \visible<4->{
-  \begin{qbox}
-    Compactness comes from the \textbf{structure of the PDE}, not from the objective.
-  \end{qbox}
-  }
+  \vfill\hfill\hyperlink{fadetails}{\beamergotobutton{Proofs}}
 \end{frame}
 
 % ============================================================
@@ -205,17 +79,17 @@
 % ============================================================
 \begin{frame}{Step 2: The Reduced Problem}
   \begin{hlbox}
-    Eliminate the state using $u = Sz$ from Step 1:
+    Eliminate the state $u = Sz$. The tracking term observes $u$ in $\Ltwo$ through $C : \Hzero \hookrightarrow \Ltwo$:
     \[
-      \min_{z \in Z_{\rm ad}}\; J(Sz,z) = \frac12 \norm{Sz - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2 .
+      \min_{z \in Z_{\rm ad}}\; J(Sz,z) = \frac12 \big\| \underbrace{C}_{\text{observe}}\,\underbrace{S}_{\text{solve}} z - u_d \big\|_{L^2}^2 + \frac{\alpha}{2}\norm{z}_{L^2}^2 .
     \]
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
     \begin{itemize}
-      \item $Z_{\rm ad}$ is convex and closed in $\Ltwo$; nonempty if $z_a \le z_b$, bounded if $z_a, z_b \in \Ltwo$.
-      \item $z \mapsto J(Sz,z)$ is convex and continuous, since $S$ is linear and bounded; $\alpha$-strongly convex if $\alpha > 0$.
+      \item $Z_{\rm ad}$ is convex and closed in $\Ltwo$; for $z_a \le z_b$ in $\Ltwo$ it is also nonempty and bounded.
+      \item $z \mapsto J(Sz,z)$ is convex and continuous, since $CS$ is linear and bounded; $\alpha$-strongly convex if $\alpha > 0$.
     \end{itemize}
   \end{hlbox}
   }
@@ -227,9 +101,6 @@
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 3a: existence theorem
-% ------------------------------------------------------------
 \begin{frame}{Step 3: Existence via the Direct Method}
   \begin{qbox}
     \textbf{Theorem.} Let $\alpha \ge 0$ and let $Z_{\rm ad}$ be nonempty, convex, and closed. If $Z_{\rm ad}$ is bounded \emph{or} $\alpha > 0$, then the reduced problem has a solution $\bar z \in Z_{\rm ad}$. If $\alpha > 0$, it is unique.
@@ -238,32 +109,29 @@
   \visible<2->{
   \begin{hlbox}
     \textbf{Why the alternative?} If $\alpha > 0$, the objective is \emph{coercive}:
-    $\norm{z}_{\Ltwo}^2 \le \tfrac{2}{\alpha}\, J(Sz,z)$, so bounded sublevel sets replace a bounded $Z_{\rm ad}$.
+    $\norm{z}_{L^2}^2 \le \tfrac{2}{\alpha}\, J(Sz,z)$, so bounded sublevel sets replace a bounded $Z_{\rm ad}$.
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{hlbox}
-    \textbf{If $\alpha = 0$ and $Z_{\rm ad} = \Ltwo$}, existence can fail: the range of $S$ is dense in $\Ltwo$, so the infimum is $0$, but it is attained only if $u_d \in \operatorname{ran} S = \{ u \in \Hzero : \Delta u \in \Ltwo \}$.
+    \textbf{If $\alpha = 0$ and $Z_{\rm ad} = \Ltwo$}, existence can fail: the range of $CS$ is dense in $\Ltwo$, so the infimum is $0$, but it is attained only if $u_d \in \operatorname{ran}(CS) = \{ u \in \Hzero : \Delta u \in \Ltwo \}$.
   \end{hlbox}
   }
 
   \visible<4->{
   \begin{qbox}
-    This is the ill-posedness of the inverse problem; the Tikhonov term $\tfrac{\alpha}{2}\norm{z}^2$ restores existence.
+    This is the ill-posedness of the inverse problem; the Tikhonov term $\tfrac{\alpha}{2}\norm{z}_{L^2}^2$ restores existence.
   \end{qbox}
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 3b: proof, part 1
-% ------------------------------------------------------------
 \begin{frame}{Proof of Existence (1/2): A Weak Limit in $Z_{\rm ad}$}
   \begin{hlbox}
     \begin{enumerate}
       \item<1-> \textbf{Minimizing sequence.} $\bar\jmath := \inf_{Z_{\rm ad}} J(Sz,z) \ge 0$ is finite. Choose $z_n \in Z_{\rm ad}$ with $J(Sz_n,z_n) \to \bar\jmath$.
       \item<2-> \textbf{Boundedness.} If $Z_{\rm ad}$ is bounded, so is $(z_n)$. Otherwise $\alpha > 0$ and, for $n$ large,
-        $\norm{z_n}_{\Ltwo}^2 \le \tfrac{2}{\alpha}(\bar\jmath + 1)$.
+        $\norm{z_n}_{L^2}^2 \le \tfrac{2}{\alpha}(\bar\jmath + 1)$.
       \item<3-> \textbf{Weak compactness.} $\Ltwo$ is a Hilbert space, so bounded sequences have weakly convergent subsequences: $z_n \weakto \bar z$ (after relabeling).
       \item<4-> \textbf{Feasibility.} $Z_{\rm ad}$ is convex and closed, hence weakly closed (Mazur). Thus $\bar z \in Z_{\rm ad}$.
     \end{enumerate}
@@ -276,23 +144,20 @@
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 3c: proof, part 2 -- weak lower semicontinuity
-% ------------------------------------------------------------
 \begin{frame}{Proof of Existence (2/2): Weak Lower Semicontinuity}
   \begin{hlbox}
-    \textbf{Route A: convexity.} $z \mapsto J(Sz,z)$ is convex and continuous on $\Ltwo$. Its sublevel sets are convex and closed, hence weakly closed (Mazur): $J$ is weakly l.s.c.
+    \textbf{Route A: convexity.} $z \mapsto J(Sz,z)$ is convex and continuous on $\Ltwo$. Its sublevel sets are convex and closed, hence weakly closed (Mazur): it is weakly l.s.c.
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Route B: compactness of $S$.} By Step 1, $Sz_n \to S\bar z$ strongly, so the tracking term \emph{converges}. Only the control cost needs l.s.c., and norms are weakly l.s.c.: $\norm{\bar z}_{\Ltwo} \le \liminf_n \norm{z_n}_{\Ltwo}$.
+    \textbf{Route B: compactness of $S$.} By Step 1, $Sz_n \to S\bar z$ in $\Hzero$, so $CSz_n \to CS\bar z$ and the tracking term \emph{converges}. Only the control cost needs l.s.c., and norms are weakly l.s.c.: $\norm{\bar z}_{L^2} \le \liminf_n \norm{z_n}_{L^2}$.
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{hlbox}
-    Either way, $J(S\bar z,\bar z) \le \bar\jmath$, so $\bar z$ is optimal. \hfill \qed
+    Either way, $J(S\bar z,\bar z) \le \bar\jmath$, so $\bar z$ is optimal. \textbf{Uniqueness:} $g \circ CS$ is convex and $\tfrac{\alpha}{2}\norm{\cdot}_{L^2}^2$ is $\alpha$-strongly convex, so the sum has at most one minimizer. \hfill \qed
   \end{hlbox}
   }
 
@@ -303,132 +168,140 @@
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 3d: uniqueness
-% ------------------------------------------------------------
-\begin{frame}{Uniqueness: Strong Convexity}
-  \begin{hlbox}
-    Write $J(Sz,z) = g(Sz) + \tfrac{\alpha}{2}\norm{z}_{\Ltwo}^2$ with $g(u) := \tfrac12\norm{u - u_d}_{\Ltwo}^2$.
-    \begin{itemize}
-      \item $g$ is convex and $S$ is linear, so $g \circ S$ is convex.
-      \item $\tfrac{\alpha}{2}\norm{\cdot}^2$ is $\alpha$-strongly convex, so the sum is $\alpha$-strongly convex.
-    \end{itemize}
-  \end{hlbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    A strongly convex function has at most one minimizer on a convex set. \hfill \qed
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{qbox}
-    The tracking term $g \circ S$ is only convex; strong convexity comes from the Tikhonov term.
-  \end{qbox}
-  }
-\end{frame}
-
 % ============================================================
 \section{Optimality Conditions}
 % ============================================================
-% ------------------------------------------------------------
-% Step 4a: the variational inequality
-% ------------------------------------------------------------
 \begin{frame}{Step 4: First-Order Necessary Conditions}
   \begin{qbox}
-    \textbf{Theorem.} Write $\hat J(z) := J(Sz,z)$. Let $Z_{\rm ad}$ be convex and $\hat J$ G\^ateaux differentiable at a local minimizer $\bar z$. Then
+    \textbf{Theorem.} Let $Z_{\rm ad}$ be convex and $\hat J(z) := J(Sz,z)$ G\^ateaux differentiable at a local minimizer $\bar z$. Then
     \[
       \hat J'(\bar z)(z - \bar z) \ge 0 \qquad \forall z \in Z_{\rm ad}.
     \]
+    For convex $\hat J$ it is sufficient: $\hat J(z) \ge \hat J(\bar z) + \hat J'(\bar z)(z - \bar z) \ge \hat J(\bar z)$.
   \end{qbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Proof.} For $z \in Z_{\rm ad}$, $t \in (0,1]$: $\bar z + t(z - \bar z) \in Z_{\rm ad}$ by convexity. By optimality, for small $t$,
+    \textbf{Proof.} $\bar z + t(z - \bar z) \in Z_{\rm ad}$ for $t \in (0,1]$. By optimality, for small $t$,
     \[
-      0 \le \hat J\big(\bar z + t(z - \bar z)\big) - \hat J(\bar z) = t\,\hat J'(\bar z)(z - \bar z) + o(t).
+      0 \le \hat J\big(\bar z + t(z - \bar z)\big) - \hat J(\bar z) = t\,\hat J'(\bar z)(z - \bar z) + o(t) .
     \]
-    Divide by $t$ and let $t \downarrow 0$. \hfill \qed
+    \vspace{-1ex}Divide by $t$, let $t \downarrow 0$. \hfill \qed
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{qbox}
-    Only derivatives along feasible directions enter: \textbf{G\^ateaux differentiability is enough}.
+    Only feasible directions enter: \textbf{G\^ateaux differentiability suffices}.
   \end{qbox}
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 4b: sufficiency and the model problem
-% ------------------------------------------------------------
-\begin{frame}{Step 4: Sufficiency and the Model Problem}
+\begin{frame}{Step 4: The Model Problem}
+  \visible<1->{
   \begin{hlbox}
-    \textbf{Sufficiency.} If $\hat J$ is convex, $\hat J(z) \ge \hat J(\bar z) + \hat J'(\bar z)(z - \bar z) \ge \hat J(\bar z)$.
+    \textbf{Model problem.} For all $z, h \in \Ltwo$,
+    \[
+      \hat J'(z)h = (CSz - u_d, CSh)_{L^2} + \alpha (z,h)_{L^2} = \dual{(CS)^*\Lambda(CSz - u_d) + \alpha\Lambda z}{h}_{(L^2)^*,L^2},
+    \]
+    with the dual operator $(CS)^*$ and the Riesz map $\Lambda : \Ltwo \to \Ltwo^*$ (Step 5).
   \end{hlbox}
+  }
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Model problem.} Since $S$ is linear and bounded, for all $z, h \in \Ltwo$,
+    The VI for the model problem reads
     \[
-      \hat J'(z)h = (Sz - u_d, Sh) + \alpha (z,h) = \big(S^*(Sz - u_d) + \alpha z,\; h\big).
+      \dual{(CS)^*\Lambda(CS\bar z - u_d) + \alpha\Lambda\bar z}{z - \bar z}_{(L^2)^*,L^2} \ge 0 \qquad \forall z \in Z_{\rm ad}.
     \]
   \end{hlbox}
   }
 
   \visible<3->{
-  \begin{hlbox}
-    The variational inequality for the model problem reads
-    \[
-      \big(S^*(S\bar z - u_d) + \alpha \bar z,\; z - \bar z\big) \ge 0 \qquad \forall z \in Z_{\rm ad}.
-    \]
-  \end{hlbox}
-  }
-
-  \visible<4->{
   \begin{qbox}
-    How do we evaluate $S^*$ without forming it?
+    How do we evaluate $(CS)^*$ without forming it?
   \end{qbox}
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 5a: S^* is a PDE solution operator
-% ------------------------------------------------------------
+\begin{frame}{Step 5: Dual Operators and Riesz Maps}
+  \framesubtitle{Following Lions (1971)}
+  \begin{hlbox}
+    \begin{itemize}
+      \item<1-> \textbf{Dual operator.} For $T \in \mathcal{L}(X,Y)$: \; $T^* \in \mathcal{L}(Y^*, X^*)$, \; $\dual{T^* y}{x}_{X^*,X} := \dual{y}{Tx}_{Y^*,Y}$.
+      \item<2-> \textbf{Riesz map.} For a Hilbert space $X$: \; $\Lambda_X : X \to X^*$, \; $\dual{\Lambda_X x}{y}_{X^*,X} := (x, y)_X$.
+    \end{itemize}
+    \visible<2->{We never identify $X$ with $X^*$: every Riesz map is written out.}
+  \end{hlbox}
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{Our operators.} With $\Lambda := \Lambda_{L^2}$: \; $\iota = C^*\Lambda$, i.e.\ $\dual{\iota z}{v}_{H^{-1},H^1_0} = (z, Cv)_{L^2}$, and
+    \[
+      CS = C \circ A^{-1} \circ \iota : \;\; \Ltwo \xrightarrow{\;\iota\;} H^{-1}(D) \xrightarrow{\;A^{-1}\;} \Hzero \xrightarrow{\;C\;} \Ltwo .
+    \]
+  \end{hlbox}
+  }
+
+\end{frame}
+
+\begin{frame}{Step 5: What the Maps Become after Discretization}
+  \begin{hlbox}
+    P1 elements, $u_h = \sum_j u_j\varphi_j$, $z_h = \sum_j z_j\varphi_j$, coefficient vectors $u, z \in \R^m$:
+    \begin{center}
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{@{}lll@{}}
+      \toprule
+      Continuous & Discrete & Why \\
+      \midrule
+      $A$ & $K$ (stiffness) & $\dual{A u_h}{\varphi_i}_{H^{-1},H^1_0} = a(u_h,\varphi_i)$ \\
+      $\iota$ & $M$ (mass) & $\dual{\iota z_h}{\varphi_i}_{H^{-1},H^1_0} = (z_h,\varphi_i)_{L^2}$ \\
+      $\Lambda$, \; $\Lambda^{-1}$ & $M$, \; $M^{-1}$ & $(u_h, v_h)_{L^2} = u^\top M v$ \\
+      $C$ & $I$ on coefficients & same function, but measured with $M$ \\
+      $T^*$ & $T^\top$ & dual operator = transpose \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+  \end{hlbox}
+
+  \visible<2->{
+  \begin{qbox}
+    \textbf{Why we keep them:} dropping $\Lambda$ or $\iota$ means replacing $M$ by $I$, i.e.\ silently using the Euclidean inner product. That is exactly what makes methods mesh dependent (Section 7).
+  \end{qbox}
+  }
+\end{frame}
+
 \begin{frame}{Step 5: The Adjoint Equation}
   \begin{hlbox}
-    \textbf{Factorization.} As a map on $\Ltwo$, the solution operator is the composition
+    \textbf{Lemma.} Let $p := A^{-*}C^*\Lambda(CSz - u_d) \in \Hzero$. Then
     \[
-      S = E \circ A^{-1} \circ \iota : \;\; \Ltwo \xrightarrow{\;\iota\;} H^{-1}(D) \xrightarrow{\;A^{-1}\;} \Hzero \xrightarrow{\;E\;} \Ltwo .
+      (CS)^*\Lambda(CSz - u_d) = \iota^* p = \Lambda C p .
     \]
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Adjoint in $\Ltwo$.} Since $\iota = E^*$ (Step 1), we get $S^* = \iota^* \circ A^{-*} \circ E^* = E \circ A^{-*} \circ \iota$: again a PDE solve, with $A^*$ in place of $A$.
+    \textbf{Proof.} $(CS)^* = \iota^* A^{-*} C^*$ by the product rule for dual operators ($\Hzero$ is reflexive). And $\dual{\iota^* p}{h}_{(L^2)^*,L^2} = \dual{\iota h}{p}_{H^{-1},H^1_0} = (h, Cp)_{L^2} = \dual{\Lambda Cp}{h}_{(L^2)^*,L^2}$. \hfill\qed
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{hlbox}
-    \textbf{Lemma.} $a$ is symmetric, so $A^* = A$ and $S^* = S$: \; $p := S^*f$ solves $a(p,v) = (f,v)$ for all $v \in \Hzero$.\\[0.5ex]
-    \emph{Check:} $(f, Sh) = a(p, Sh) = a(Sh, p) = (h, p)$ for all $h \in \Ltwo$. \hfill \qed
+    \textbf{Adjoint equation.} $A^* p = C^*\Lambda(Cu - u_d)$, \; i.e.\ $a(v,p) = (Cu - u_d, Cv)_{L^2}$ for all $v \in \Hzero$. Since $a$ is symmetric, $A^* = A$: \; $-\Delta p = u - u_d$, $p|_{\partial D} = 0$.
   \end{hlbox}
   }
 
   \visible<4->{
   \begin{qbox}
-    For nonsymmetric $a$, the adjoint equation is $a(v,p) = (f,v)$, i.e., $A^*p = f$.
+    Hence $\hat J'(z) = \Lambda(Cp + \alpha z)$: the derivative needs one extra \emph{linear} PDE solve.
   \end{qbox}
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 5b: adjoint state and gradient
-% ------------------------------------------------------------
 \begin{frame}{Step 5: The Adjoint State and the Gradient}
   \begin{hlbox}
-    \textbf{Adjoint state.} With $\bar u = S\bar z$, let $\bar p := S^*(\bar u - u_d) \in \Hzero$, i.e.
+    \textbf{Adjoint state.} With $\bar u = S\bar z$, let $\bar p := A^{-*}C^*\Lambda(C\bar u - u_d) \in \Hzero$, i.e.
     \[
       -\Delta \bar p = \bar u - u_d \;\;\text{in } D, \qquad \bar p = 0 \;\;\text{on } \partial D.
     \]
@@ -436,9 +309,9 @@
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Gradient.} By Step 4, $\hat J'(\bar z)h = (\bar p + \alpha\bar z,\, h)$, so the $L^2$-gradient is $\nabla \hat J(\bar z) = \bar p + \alpha \bar z$ and the VI reads
+    \textbf{Gradient.} $\nabla \hat J(\bar z) := \Lambda^{-1}\hat J'(\bar z) = C\bar p + \alpha \bar z$. Writing $\bar p$ for $C\bar p$ (the same function), the VI reads
     \[
-      (\bar p + \alpha\bar z,\; z - \bar z) \ge 0 \qquad \forall z \in Z_{\rm ad}.
+      (\bar p + \alpha\bar z,\; z - \bar z)_{L^2} \ge 0 \qquad \forall z \in Z_{\rm ad}.
     \]
   \end{hlbox}
   }
@@ -450,9 +323,6 @@
   }
 \end{frame}
 
-% ------------------------------------------------------------
-% Step 6a: the primal-dual optimality system
-% ------------------------------------------------------------
 \begin{frame}[label=kkt]{The Primal--Dual Optimality System}
   \begin{hlbox}
     \textbf{Theorem.} $\bar z \in Z_{\rm ad}$ is optimal if and only if there exist $\bar u, \bar p \in \Hzero$ such that
@@ -460,16 +330,16 @@
       \begin{aligned}
         -\Delta \bar u &= \bar z \;\;\text{in } D, \quad \bar u = 0 \;\;\text{on } \partial D && \text{(state)}\\
         -\Delta \bar p &= \bar u - u_d \;\;\text{in } D, \quad \bar p = 0 \;\;\text{on } \partial D && \text{(adjoint)}\\
-        (\bar p + \alpha \bar z,\; z - \bar z) &\ge 0 \quad \forall z \in Z_{\rm ad} && \text{(VI)}
+        (\bar p + \alpha \bar z,\; z - \bar z)_{L^2} &\ge 0 \quad \forall z \in Z_{\rm ad} && \text{(VI)}
       \end{aligned}
     \]
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Compare with $\R^n$.} For $\min J(u,z)$ s.t.\ $e(u,z) = 0$, $z \in C$, with $\Lag = J - \lambda^\top e$, the KKT conditions are
+    \textbf{Compare with $\R^n$.} For $\min J(u,z)$ s.t.\ $e(u,z) = 0$, $z \in K$, with $\Lag = J - \lambda^\top e$, the KKT conditions are
     \[
-      e(\bar u,\bar z) = 0, \qquad \nabla_u \Lag = 0, \qquad \nabla_z \Lag^\top (z - \bar z) \ge 0 \;\; \forall z \in C .
+      e(\bar u,\bar z) = 0, \qquad \nabla_u \Lag = 0, \qquad \nabla_z \Lag^\top (z - \bar z) \ge 0 \;\; \forall z \in K .
     \]
   \end{hlbox}
   }

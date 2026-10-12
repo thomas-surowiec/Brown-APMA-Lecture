@@ -1,31 +1,43 @@
 \documentclass[main.tex]{subfiles}
 \begin{document}
 % ============================================================
-%  11. Outlook and summary   (~3 min)
+%  10. Summary
 % ============================================================
-\section{Outlook and Summary}
+\section{Summary}
 
-\begin{frame}{Back to uncertainty}
-  For $f(u) = \E\big[\tfrac12\norm{y(\omega) - y_d}^2\big] + \tfrac\alpha2\norm{u}^2$:
-  \[
-    \nabla f(u) = \alpha u + \E[p(\omega)], \qquad -\nabla\cdot(\kappa(\omega)\nabla p(\omega)) = y(\omega) - y_d .
-  \]
-  \begin{itemize}
-    \item Sample average approximation: $N$ state $+$ $N$ adjoint solves per gradient.
-    \item Everything from Part II carries over: $L^2$ gradients, projections, projected Newton.
-    \item Risk-averse measures ($\mathrm{CVaR}$) are nonsmooth: smoothing or nonsmooth methods.
-  \end{itemize}
-  \vspace{0.5ex}
-  \textbf{Further directions:} state constraints, sparsity ($L^1$) costs, shape optimization, inverse problems.
-\end{frame}
-
-\begin{frame}{Take-home messages}
-  \begin{enumerate}
-    \item \textbf{Analysis:} well-posedness $\to$ reduced problem $\to$ existence $\to$ VI $\to$ adjoint.
-    \item \textbf{Adjoints} make gradients cost one extra (linear) PDE solve, and Hessian-vector products two.
-    \item \textbf{Inner products matter:} gradients and projections must be formulated in function space to get mesh independence.
-    \item \textbf{Projected gradient} with an Armijo search along the projection arc is robust; \textbf{projected Newton} adds fast local convergence at matrix-free cost.
-  \end{enumerate}
+\begin{frame}{Take-Home Messages}
+  \vspace*{\fill}
+  \begin{center}
+  \begin{tikzpicture}[
+      card/.style={rectangle, rounded corners=2mm, fill=brownred!6,
+        minimum width=6.6cm, minimum height=2.3cm, text width=6.1cm,
+        align=left, inner sep=2.5mm,
+        blur shadow={shadow blur steps=6, shadow xshift=0.6mm, shadow yshift=-0.6mm, shadow opacity=25}},
+      num/.style={circle, fill=accent, text=white, font=\scriptsize\bfseries,
+        inner sep=0pt, minimum size=4.6mm}]
+    \visible<1->{
+      \node[card] (c1) at (0,0) {\textbf{Analysis}\\[0.6ex]\small
+        Well-posed state equation $\to$ reduced problem $\to$ existence (direct method) $\to$ VI $\to$ adjoint.};
+      \node[num] at (c1.north west) {1};
+    }
+    \visible<2->{
+      \node[card] (c2) at (7.0,0) {\textbf{Adjoints}\\[0.6ex]\small
+        A gradient costs one extra linear PDE solve; a Hessian-vector product costs two. Never form the Hessian.};
+      \node[num] at (c2.north west) {2};
+    }
+    \visible<3->{
+      \node[card] (c3) at (0,-2.95) {\textbf{Inner products}\\[0.6ex]\small
+        Formulate in $Z$, then discretize. The spectrum of the Hessian decides the rate: mesh independence.};
+      \node[num] at (c3.north west) {3};
+    }
+    \visible<4->{
+      \node[card] (c4) at (7.0,-2.95) {\textbf{Algorithms}\\[0.6ex]\small
+        Projected gradient with Armijo along the arc; projected Newton with the reduced Hessian and matrix-free CG.};
+      \node[num] at (c4.north west) {4};
+    }
+  \end{tikzpicture}
+  \end{center}
+  \vspace*{\fill}
 \end{frame}
 
 \end{document}

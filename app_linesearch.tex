@@ -1,0 +1,49 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+% ============================================================
+%  Appendix: line search details
+% ============================================================
+\section{Appendix: Line Search}
+
+\begin{frame}[label=lsdetails]{Line Search: The Key Inequality}
+  \begin{hlbox}
+    \textbf{Key inequality.} With $v = z - s\nabla\hat J(z)$, $w = z(s)$, and test point $z \in Z_{\rm ad}$, the projection characterization $(v - w, z - w)_Z \le 0$ gives
+    \[
+      \big(\nabla\hat J(z),\, z - z(s)\big)_Z \;\ge\; \tfrac{1}{s}\,\norm{z - z(s)}_Z^2 .
+    \]
+    So the Armijo right-hand side is positive unless $z$ is stationary.
+  \end{hlbox}
+
+  \begin{qbox}
+    Variant (e.g., Kelley 1999): \; $\hat J(z_k(s)) - \hat J(z_k) \le -\tfrac{\sigma}{s}\norm{z_k - z_k(s)}_Z^2$; by the key inequality, it is implied by the rule above.
+  \end{qbox}
+  \vfill\hfill\hyperlink{armijo<3>}{\beamerreturnbutton{Back to Section 8}}
+\end{frame}
+
+\begin{frame}{Line Search: Existence of the Armijo Step}
+  \begin{hlbox}
+    \textbf{Existence of the step.} If $\nabla\hat J$ is $L$-Lipschitz, the descent lemma and the key inequality give
+    \[
+      \hat J(z(s)) \le \hat J(z) - \big(1 - \tfrac{Ls}{2}\big)\big(\nabla\hat J(z),\, z - z(s)\big)_Z,
+    \]
+    so the Armijo condition holds for all $s \le 2(1 - \sigma)/L$. Backtracking stops after finitely many trials, with $s_k \ge \min\{\bar s,\, 2\beta(1 - \sigma)/L\}$.
+  \end{hlbox}
+  \vfill\hfill\hyperlink{armijo<3>}{\beamerreturnbutton{Back to Section 8}}
+\end{frame}
+
+\begin{frame}{Line Search: Convergence Theory}
+  \begin{hlbox}
+    \begin{itemize}
+      \item \textbf{Global convergence} (Bertsekas 1976): every accumulation point of the projected gradient iterates with Armijo steps is stationary.
+      \item \textbf{Hilbert space} (Dunn 1981): global convergence and rate estimates for projected gradient processes, under growth conditions at $\bar z$.
+      \item \textbf{Active sets} (finite dimensions): under strict complementarity, the active set is identified after finitely many iterations.
+    \end{itemize}
+  \end{hlbox}
+
+  \begin{qbox}
+    Once the active set is (nearly) known, Newton's method on the free variables converges much faster: this motivates projected Newton.
+  \end{qbox}
+  \vfill\hfill\hyperlink{armijo<3>}{\beamerreturnbutton{Back to Section 8}}
+\end{frame}
+
+\end{document}

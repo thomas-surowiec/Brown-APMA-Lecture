@@ -7,11 +7,7 @@
 
 \begin{frame}{Recap of Part I}
   \begin{hlbox}
-    \textbf{Reduced problem} (Sections 2--3). With the solution operator $S$,
-    \[
-      \min_{z \in Z_{\rm ad}}\; \hat J(z) := \frac12 \norm{Sz - u_d}_{\Ltwo}^2 + \frac{\alpha}{2}\norm{z}_{\Ltwo}^2 .
-    \]
-    For $\alpha > 0$, $\hat J$ is $\alpha$-strongly convex, and there is a unique solution $\bar z$.
+    \textbf{Reduced problem} (Sections 2--3): \; $\min_{z \in Z_{\rm ad}} \hat J(z) := \tfrac12 \norm{CSz - u_d}_{L^2}^2 + \tfrac{\alpha}{2}\norm{z}_{L^2}^2$. For $\alpha > 0$, $\hat J$ is $\alpha$-strongly convex with a unique minimizer $\bar z$.
   \end{hlbox}
 
   \visible<2->{
@@ -21,32 +17,15 @@
       \begin{aligned}
         -\Delta \bar u &= \bar z \;\;\text{in } D, \quad \bar u = 0 \;\;\text{on } \partial D && \text{(state)}\\
         -\Delta \bar p &= \bar u - u_d \;\;\text{in } D, \quad \bar p = 0 \;\;\text{on } \partial D && \text{(adjoint)}\\
-        (\bar p + \alpha \bar z,\; z - \bar z) &\ge 0 \quad \forall z \in Z_{\rm ad} && \text{(VI)}
+        (\bar p + \alpha \bar z,\; z - \bar z)_{L^2} &\ge 0 \quad \forall z \in Z_{\rm ad} && \text{(VI)}
       \end{aligned}
     \]
   \end{hlbox}
   }
-\end{frame}
 
-\begin{frame}{Recap of Part I: Computing the Gradient}
-  \begin{hlbox}
-    \textbf{Gradient at any $z \in \Ltwo$} (Section 5):
-    \begin{enumerate}
-      \item<2-> Solve the state equation: \; $-\Delta u = z$ in $D$, $u = 0$ on $\partial D$.
-      \item<3-> Solve the adjoint equation: \; $-\Delta p = u - u_d$ in $D$, $p = 0$ on $\partial D$.
-      \item<4-> Set \; $\nabla \hat J(z) = p + \alpha z$.
-    \end{enumerate}
-  \end{hlbox}
-
-  \visible<5->{
-  \begin{hlbox}
-    Evaluating $\hat J(z)$ costs one state solve; $\nabla \hat J(z)$ costs one more. Projecting onto $Z_{\rm ad}$ is pointwise and cheap.
-  \end{hlbox}
-  }
-
-  \visible<6->{
+  \visible<3->{
   \begin{qbox}
-    How do we turn this into an algorithm whose behavior does not depend on the mesh?
+    \textbf{At any $z$} (Section 5): one state solve and one adjoint solve give $\nabla\hat J(z) = p + \alpha z$. How do we turn this into a mesh-independent algorithm?
   \end{qbox}
   }
 \end{frame}
@@ -56,12 +35,12 @@
 % ------------------------------------------------------------
 \begin{frame}{From the Variational Inequality to Pointwise Conditions}
   \begin{qbox}
-    \textbf{Lemma.} With $g := \bar p + \alpha \bar z$, the VI $(g, z - \bar z) \ge 0$ $\forall z \in Z_{\rm ad}$ holds if and only if, a.e.\ in $D$,
+    \textbf{Lemma.} With $g := \bar p + \alpha \bar z$, the VI $(g, z - \bar z)_{L^2} \ge 0$ $\forall z \in Z_{\rm ad}$ holds if and only if, a.e.\ in $D$,
     \[
       g \;\begin{cases}
         = 0 & \text{where } z_a < \bar z < z_b,\\
-        \ge 0 & \text{where } \bar z = z_a,\\
-        \le 0 & \text{where } \bar z = z_b.
+        \ge 0 & \text{where } z_a = \bar z < z_b,\\
+        \le 0 & \text{where } z_a < \bar z = z_b.
       \end{cases}
     \]
   \end{qbox}
@@ -84,22 +63,23 @@
 % The projection formula
 % ------------------------------------------------------------
 \begin{frame}{The Projection Formula}
-  \begin{columns}[T]
+  \begin{columns}[c]
     \begin{column}{0.56\textwidth}
       \begin{hlbox}
-        With $g = \bar p + \alpha\bar z$ and $\alpha > 0$, read off the three cases:
-        \begin{itemize}
-          \item<2-> $z_a < \bar z < z_b$: \; $g = 0$, so $\bar z = -\tfrac{1}{\alpha}\bar p$.
-          \item<3-> $\bar z = z_a$: \; $g \ge 0$, so $-\tfrac{1}{\alpha}\bar p \le z_a$.
-          \item<4-> $\bar z = z_b$: \; $g \le 0$, so $-\tfrac{1}{\alpha}\bar p \ge z_b$.
-        \end{itemize}
+        For $\alpha > 0$, divide the three cases by $\alpha$: with $w := -\tfrac{1}{\alpha}\bar p$,
+        \[
+          \begin{aligned}
+            \bar z &= w && \text{where } z_a < \bar z < z_b,\\
+            w &\le z_a && \text{where } \bar z = z_a,\\
+            w &\ge z_b && \text{where } \bar z = z_b .
+          \end{aligned}
+        \]
       \end{hlbox}
     \end{column}
     \begin{column}{0.40\textwidth}
-      \visible<5->{
       \begin{center}
-      \begin{tikzpicture}[scale=0.85]
-        \draw[-{Stealth[length=2mm]}, muted] (-0.3,0) -- (3.8,0) node[right, font=\footnotesize] {$-\tfrac{1}{\alpha}\bar p$};
+      \begin{tikzpicture}[scale=0.8]
+        \draw[-{Stealth[length=2mm]}, muted] (-0.3,0) -- (3.8,0) node[right, font=\footnotesize] {$w$};
         \draw[-{Stealth[length=2mm]}, muted] (0,-0.3) -- (0,3.0) node[above, font=\footnotesize] {$\bar z$};
         \draw[dashed, muted!60] (0,0.8) -- (3.6,0.8);
         \draw[dashed, muted!60] (0,2.2) -- (3.6,2.2);
@@ -108,47 +88,15 @@
         \draw[very thick, accent] (0.1,0.8) -- (0.8,0.8) -- (2.2,2.2) -- (3.5,2.2);
       \end{tikzpicture}
       \end{center}
-      }
     \end{column}
   \end{columns}
 
-  \visible<5->{
+  \visible<2->{
   \begin{qbox}
-    \textbf{Projection formula.} \;
-    $\bar z = P_{[z_a,z_b]}\big(-\tfrac{1}{\alpha}\bar p\big) = \max\big\{z_a, \min\{z_b, -\tfrac{1}{\alpha}\bar p\}\big\}$ \; a.e.\ in $D$.
+    $\bar z = P_{[z_a,z_b]}\big(-\tfrac{1}{\alpha}\bar p\big) = \max\big\{z_a, \min\{z_b, -\tfrac{1}{\alpha}\bar p\}\big\}$ a.e., \; i.e.\ \; $\bar z = P_{Z_{\rm ad}}\big(\bar z - \tfrac{1}{\alpha}\nabla\hat J(\bar z)\big)$.
   \end{qbox}
-  }
-
-  \visible<6->{
-  \begin{hlbox}
-    Equivalently, with $s = 1/\alpha$: \; $\bar z = P_{Z_{\rm ad}}\big(\bar z - s\nabla\hat J(\bar z)\big)$, the starting point for projected gradients.
-  \end{hlbox}
   }
 \end{frame}
 
-% % ------------------------------------------------------------
-% % KKT form with multipliers for the bounds
-% % ------------------------------------------------------------
-% \begin{frame}{Multipliers for the Control Bounds}
-%   \begin{hlbox}
-%     \textbf{KKT form.} Split $g = \bar p + \alpha \bar z$ into positive and negative parts, $\mu_a := g^+$, $\mu_b := g^-$:
-%     \[
-%       \bar p + \alpha\bar z - \mu_a + \mu_b = 0, \qquad \mu_a,\mu_b \ge 0, \qquad
-%       \mu_a(\bar z - z_a) = \mu_b(z_b - \bar z) = 0 \;\;\text{a.e.}
-%     \]
-%   \end{hlbox}
-
-%   \visible<2->{
-%   \begin{hlbox}
-%     Complementarity is the case distinction: $\mu_a > 0$ only where $\bar z = z_a$, and $\mu_b > 0$ only where $\bar z = z_b$.
-%   \end{hlbox}
-%   }
-
-%   \visible<3->{
-%   \begin{qbox}
-%     $\mu_a, \mu_b \in \Ltwo$ are the Lagrange multipliers for the bounds, just as $\bar p$ is the multiplier for the PDE.
-%   \end{qbox}
-%   }
-% \end{frame}
 
 \end{document}
