@@ -108,18 +108,11 @@
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Why the alternative?} If $\alpha > 0$, the objective is \emph{coercive}:
-    $\norm{z}_{L^2}^2 \le \tfrac{2}{\alpha}\, J(Sz,z)$, so bounded sublevel sets replace a bounded $Z_{\rm ad}$.
+    \textbf{Why the alternative?} For $\alpha > 0$, $\norm{z}_{L^2}^2 \le \tfrac{2}{\alpha}J(Sz,z)$: sublevel sets are bounded. For $\alpha = 0$ and $Z_{\rm ad} = \Ltwo$, the infimum $0$ is attained only if $u_d \in \operatorname{ran}(CS) = \{ u \in \Hzero : \Delta u \in \Ltwo \}$.
   \end{hlbox}
   }
 
   \visible<3->{
-  \begin{hlbox}
-    \textbf{If $\alpha = 0$ and $Z_{\rm ad} = \Ltwo$}, existence can fail: the range of $CS$ is dense in $\Ltwo$, so the infimum is $0$, but it is attained only if $u_d \in \operatorname{ran}(CS) = \{ u \in \Hzero : \Delta u \in \Ltwo \}$.
-  \end{hlbox}
-  }
-
-  \visible<4->{
   \begin{qbox}
     This is the ill-posedness of the inverse problem; the Tikhonov term $\tfrac{\alpha}{2}\norm{z}_{L^2}^2$ restores existence.
   \end{qbox}
@@ -197,128 +190,57 @@
   }
 \end{frame}
 
-\begin{frame}{Step 4: The Model Problem}
-  \visible<1->{
-  \begin{hlbox}
-    \textbf{Model problem.} For all $z, h \in \Ltwo$,
-    \[
-      \hat J'(z)h = (CSz - u_d, CSh)_{L^2} + \alpha (z,h)_{L^2} = \dual{(CS)^*\Lambda(CSz - u_d) + \alpha\Lambda z}{h}_{(L^2)^*,L^2},
-    \]
-    with the dual operator $(CS)^*$ and the Riesz map $\Lambda : \Ltwo \to \Ltwo^*$ (Step 5).
-  \end{hlbox}
-  }
 
-  \visible<2->{
-  \begin{hlbox}
-    The VI for the model problem reads
-    \[
-      \dual{(CS)^*\Lambda(CS\bar z - u_d) + \alpha\Lambda\bar z}{z - \bar z}_{(L^2)^*,L^2} \ge 0 \qquad \forall z \in Z_{\rm ad}.
-    \]
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{qbox}
-    How do we evaluate $(CS)^*$ without forming it?
-  \end{qbox}
-  }
-\end{frame}
-
+% ------------------------------------------------------------
+% Step 5a: dual operators and Riesz maps
+% ------------------------------------------------------------
 \begin{frame}{Step 5: Dual Operators and Riesz Maps}
   \framesubtitle{Following Lions (1971)}
   \begin{hlbox}
     \begin{itemize}
-      \item<1-> \textbf{Dual operator.} For $T \in \mathcal{L}(X,Y)$: \; $T^* \in \mathcal{L}(Y^*, X^*)$, \; $\dual{T^* y}{x}_{X^*,X} := \dual{y}{Tx}_{Y^*,Y}$.
-      \item<2-> \textbf{Riesz map.} For a Hilbert space $X$: \; $\Lambda_X : X \to X^*$, \; $\dual{\Lambda_X x}{y}_{X^*,X} := (x, y)_X$.
+      \item<1-> \textbf{Dual operator} of $T \in \mathcal{L}(X,Y)$: \; $T^* \in \mathcal{L}(Y^*, X^*)$, \; $\dual{T^* y}{x}_{X^*,X} := \dual{y}{Tx}_{Y^*,Y}$.
+      \item<2-> \textbf{Riesz map} of a Hilbert space $X$: \; $\Lambda_X : X \to X^*$, \; $\dual{\Lambda_X x}{y}_{X^*,X} := (x, y)_X$.
     \end{itemize}
     \visible<2->{We never identify $X$ with $X^*$: every Riesz map is written out.}
   \end{hlbox}
 
   \visible<3->{
   \begin{hlbox}
-    \textbf{Our operators.} With $\Lambda := \Lambda_{L^2}$: \; $\iota = C^*\Lambda$, i.e.\ $\dual{\iota z}{v}_{H^{-1},H^1_0} = (z, Cv)_{L^2}$, and
+    \textbf{Our operators.} With $\Lambda := \Lambda_{L^2}$, the load map is $\iota = C^*\Lambda$, and
     \[
       CS = C \circ A^{-1} \circ \iota : \;\; \Ltwo \xrightarrow{\;\iota\;} H^{-1}(D) \xrightarrow{\;A^{-1}\;} \Hzero \xrightarrow{\;C\;} \Ltwo .
     \]
   \end{hlbox}
   }
 
-\end{frame}
-
-\begin{frame}{Step 5: What the Maps Become after Discretization}
-  \begin{hlbox}
-    P1 elements, $u_h = \sum_j u_j\varphi_j$, $z_h = \sum_j z_j\varphi_j$, coefficient vectors $u, z \in \R^m$:
-    \begin{center}
-    \small
-    \renewcommand{\arraystretch}{1.15}
-    \begin{tabular}{@{}lll@{}}
-      \toprule
-      Continuous & Discrete & Why \\
-      \midrule
-      $A$ & $K$ (stiffness) & $\dual{A u_h}{\varphi_i}_{H^{-1},H^1_0} = a(u_h,\varphi_i)$ \\
-      $\iota$ & $M$ (mass) & $\dual{\iota z_h}{\varphi_i}_{H^{-1},H^1_0} = (z_h,\varphi_i)_{L^2}$ \\
-      $\Lambda$, \; $\Lambda^{-1}$ & $M$, \; $M^{-1}$ & $(u_h, v_h)_{L^2} = u^\top M v$ \\
-      $C$ & $I$ on coefficients & same function, but measured with $M$ \\
-      $T^*$ & $T^\top$ & dual operator = transpose \\
-      \bottomrule
-    \end{tabular}
-    \end{center}
-  \end{hlbox}
-
-  \visible<2->{
-  \begin{qbox}
-    \textbf{Why we keep them:} dropping $\Lambda$ or $\iota$ means replacing $M$ by $I$, i.e.\ silently using the Euclidean inner product. That is exactly what makes methods mesh dependent (Section 7).
-  \end{qbox}
-  }
-\end{frame}
-
-\begin{frame}{Step 5: The Adjoint Equation}
-  \begin{hlbox}
-    \textbf{Lemma.} Let $p := A^{-*}C^*\Lambda(CSz - u_d) \in \Hzero$. Then
-    \[
-      (CS)^*\Lambda(CSz - u_d) = \iota^* p = \Lambda C p .
-    \]
-  \end{hlbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Proof.} $(CS)^* = \iota^* A^{-*} C^*$ by the product rule for dual operators ($\Hzero$ is reflexive). And $\dual{\iota^* p}{h}_{(L^2)^*,L^2} = \dual{\iota h}{p}_{H^{-1},H^1_0} = (h, Cp)_{L^2} = \dual{\Lambda Cp}{h}_{(L^2)^*,L^2}$. \hfill\qed
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{hlbox}
-    \textbf{Adjoint equation.} $A^* p = C^*\Lambda(Cu - u_d)$, \; i.e.\ $a(v,p) = (Cu - u_d, Cv)_{L^2}$ for all $v \in \Hzero$. Since $a$ is symmetric, $A^* = A$: \; $-\Delta p = u - u_d$, $p|_{\partial D} = 0$.
-  \end{hlbox}
-  }
-
   \visible<4->{
   \begin{qbox}
-    Hence $\hat J'(z) = \Lambda(Cp + \alpha z)$: the derivative needs one extra \emph{linear} PDE solve.
+    \textbf{Discretely:} $A \to K$, \; $\iota, \Lambda \to M$, \; $C \to I$, \; $T^* \to T^\top$. Dropping $\Lambda$ or $\iota$ means replacing $M$ by $I$: the source of mesh dependence (Section 6).
   \end{qbox}
   }
 \end{frame}
 
-\begin{frame}{Step 5: The Adjoint State and the Gradient}
+% ------------------------------------------------------------
+% Step 5b: derivative, adjoint equation, gradient
+% ------------------------------------------------------------
+\begin{frame}{Step 5: The Adjoint Equation and the Gradient}
   \begin{hlbox}
-    \textbf{Adjoint state.} With $\bar u = S\bar z$, let $\bar p := A^{-*}C^*\Lambda(C\bar u - u_d) \in \Hzero$, i.e.
-    \[
-      -\Delta \bar p = \bar u - u_d \;\;\text{in } D, \qquad \bar p = 0 \;\;\text{on } \partial D.
-    \]
+    \textbf{Derivative.} \; $\hat J'(z) = (CS)^*\Lambda(CSz - u_d) + \alpha\Lambda z \in \Ltwo^*$. \; How do we evaluate $(CS)^*$?
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Gradient.} $\nabla \hat J(\bar z) := \Lambda^{-1}\hat J'(\bar z) = C\bar p + \alpha \bar z$. Writing $\bar p$ for $C\bar p$ (the same function), the VI reads
+    \textbf{Lemma.} $(CS)^*\Lambda(CSz - u_d) = \Lambda Cp$, where $p$ solves the \textbf{adjoint equation}
     \[
-      (\bar p + \alpha\bar z,\; z - \bar z)_{L^2} \ge 0 \qquad \forall z \in Z_{\rm ad}.
+      -\Delta p = u - u_d \;\;\text{in } D, \qquad p = 0 \;\;\text{on } \partial D .
     \]
+    \emph{Proof.} $(CS)^* = \iota^* A^{-*} C^*$, $A^* = A$, and $\dual{\iota^* p}{h}_{(L^2)^*,L^2} = (h, Cp)_{L^2}$. \hfill\qed
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{qbox}
-    One state solve and one adjoint solve give the full gradient, independent of the dimension of $z$.
+    \textbf{Gradient:} $\nabla\hat J(z) = \Lambda^{-1}\hat J'(z) = Cp + \alpha z$, one extra \emph{linear} PDE solve. Writing $p$ for $Cp$, the VI is \; $(\bar p + \alpha\bar z,\, z - \bar z)_{L^2} \ge 0$ for all $z \in Z_{\rm ad}$.
   \end{qbox}
   }
 \end{frame}
@@ -350,6 +272,48 @@
   \end{qbox}
   }
   \vfill\hfill\hyperlink{lagrange}{\beamergotobutton{Formal Lagrange technique}}
+\end{frame}
+
+% ------------------------------------------------------------
+% The projection formula (end of Part I)
+% ------------------------------------------------------------
+\begin{frame}[label=projform]{The Projection Formula}
+  \begin{columns}[c]
+    \begin{column}{0.58\textwidth}
+      \begin{hlbox}
+        $Z_{\rm ad}$ is defined pointwise, so the VI holds iff, a.e.\ with $g := \bar p + \alpha\bar z$,
+        \[
+          g \;\begin{cases}
+            = 0 & \text{where } z_a < \bar z < z_b,\\
+            \ge 0 & \text{where } z_a = \bar z < z_b,\\
+            \le 0 & \text{where } z_a < \bar z = z_b.
+          \end{cases}
+        \]
+      \end{hlbox}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \visible<2->{
+      \begin{center}
+      \begin{tikzpicture}[scale=0.8]
+        \draw[-{Stealth[length=2mm]}, muted] (-0.3,0) -- (3.8,0) node[right, font=\footnotesize] {$w$};
+        \draw[-{Stealth[length=2mm]}, muted] (0,-0.3) -- (0,3.0) node[above, font=\footnotesize] {$\bar z$};
+        \draw[dashed, muted!60] (0,0.8) -- (3.6,0.8);
+        \draw[dashed, muted!60] (0,2.2) -- (3.6,2.2);
+        \node[left, font=\footnotesize] at (0,0.8) {$z_a$};
+        \node[left, font=\footnotesize] at (0,2.2) {$z_b$};
+        \draw[very thick, accent] (0.1,0.8) -- (0.8,0.8) -- (2.2,2.2) -- (3.5,2.2);
+      \end{tikzpicture}
+      \end{center}
+      }
+    \end{column}
+  \end{columns}
+
+  \visible<2->{
+  \begin{qbox}
+    Dividing by $\alpha > 0$: \; $\bar z = P_{[z_a,z_b]}\big(-\tfrac{1}{\alpha}\bar p\big) = \max\big\{z_a, \min\{z_b, -\tfrac{1}{\alpha}\bar p\}\big\}$ a.e., \; i.e.\ \; $\bar z = P_{Z_{\rm ad}}\big(\bar z - \tfrac{1}{\alpha}\nabla\hat J(\bar z)\big)$.
+  \end{qbox}
+  }
+  \vfill\hfill\hyperlink{pwproof}{\beamergotobutton{Proof of the pointwise form}}
 \end{frame}
 
 \end{document}

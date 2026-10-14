@@ -3,7 +3,7 @@
 % ============================================================
 %  Appendix: functional-analytic details for Step 1
 % ============================================================
-\section{Appendix: Properties of the Solution Operator}
+\section{Appendix: Functional-Analytic Details}
 
 % ------------------------------------------------------------
 % Step 1d: proof of linearity, boundedness, differentiability
@@ -107,6 +107,33 @@
   \end{qbox}
   }
   \par\vspace{-1.5ex}\hfill\hyperlink{Sprops<4>}{\beamerreturnbutton{Back to Step 1}}
+\end{frame}
+
+\begin{frame}[label=pwproof]{Proof: The VI in Pointwise Form}
+  \begin{qbox}
+    \textbf{Lemma.} With $g := \bar p + \alpha \bar z$, the VI $(g, z - \bar z)_{L^2} \ge 0$ $\forall z \in Z_{\rm ad}$ holds if and only if, a.e.\ in $D$,
+    \[
+      g \;\begin{cases}
+        = 0 & \text{where } z_a < \bar z < z_b,\\
+        \ge 0 & \text{where } z_a = \bar z < z_b,\\
+        \le 0 & \text{where } z_a < \bar z = z_b.
+      \end{cases}
+    \]
+  \end{qbox}
+
+  \visible<2->{
+  \begin{hlbox}
+    \textbf{(i) Localize.} $Z_{\rm ad}$ is defined pointwise: for $w \in Z_{\rm ad}$ and measurable $M \subset D$, $\bar z + \chi_M (w - \bar z) \in Z_{\rm ad}$. So $\int_M g\,(w - \bar z) \dd x \ge 0$ for all $M$, i.e.\ $g\,(w - \bar z) \ge 0$ a.e.
+  \end{hlbox}
+  }
+
+  \visible<3->{
+  \begin{hlbox}
+    \textbf{(ii) Test with the bounds} $z_a, z_b \in Z_{\rm ad}$: \; $g \ge 0$ where $\bar z < z_b$, \; $g \le 0$ where $\bar z > z_a$.\\[0.3ex]
+    \visible<4->{\textbf{(iii) Converse.} The cases give $g\,(z - \bar z) \ge 0$ a.e.\ for all $z \in Z_{\rm ad}$; integrate. \hfill \qed}
+  \end{hlbox}
+  }
+  \par\vspace{-1.5ex}\hfill\hyperlink{projform<2>}{\beamerreturnbutton{Back to Section 4}}
 \end{frame}
 
 \end{document}

@@ -37,10 +37,7 @@
 % ------------------------------------------------------------
 \begin{frame}{Which Gradient? Derivative versus Gradient}
   \begin{hlbox}
-    $\hat J'(z) \in Z^*$ is a bounded linear functional. The \textbf{gradient} $\nabla_Z \hat J(z) \in Z$ is its Riesz representative, $\nabla_Z \hat J(z) = \Lambda_Z^{-1}\hat J'(z)$ with $\Lambda_Z : Z \to Z^*$:
-    \[
-      (\nabla_Z \hat J(z), h)_Z = \hat J'(z)h \qquad \forall h \in Z .
-    \]
+    The gradient $\nabla_Z \hat J(z) = \Lambda_Z^{-1}\hat J'(z)$ (Section 5) depends on the inner product of $Z$:
   \end{hlbox}
 
   \visible<2->{
@@ -64,17 +61,12 @@
   \begin{columns}[T]
     \begin{column}{0.56\textwidth}
       \begin{hlbox}
-        $D = (0,1)$, $M = (\tfrac13, \tfrac23)$, $\norm{v}_{H^1_0} := \norm{v'}_{L^2}$: \; $\ell(v) := (\chi_M, v)_{L^2}$ is bounded:
-        $|\ell(v)| \le \norm{v}_{L^2} \le c_F\norm{v}_{H^1_0}$.
+        On $D = (0,1)$, \; $\ell(v) := (\chi_M, v)_{L^2}$, \; $M = (\tfrac13, \tfrac23)$, is a bounded functional on $\Hzero$.
       \end{hlbox}
 
       \visible<2->{
       \begin{hlbox}
-        But $\chi_M \notin \Hzero$: if $v \in H^1(0,1)$,
-        \(
-          |v(x) - v(y)| = \big|\textstyle\int_y^x v'\big| \le |x - y|^{1/2}\norm{v'}_{L^2},
-        \)
-        so $v$ is continuous.
+        But $\chi_M \notin \Hzero$: in 1D, $H^1$ functions are continuous, and $\chi_M$ jumps.
       \end{hlbox}
       }
 
@@ -149,7 +141,7 @@
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Not componentwise.} $\norm{w - v}_M^2 = \sum_{i,j} M_{ij}(w_i - v_i)(w_j - v_j)$ couples neighboring nodes: every step is a QP. Clipping $\max\{z_a, \min\{z_b, v\}\}$ is the \emph{Euclidean} projection, so mixing it with $M^{-1}r$ mixes two inner products.
+    \textbf{Not componentwise.} $\norm{w - v}_M^2 = \sum_{i,j} M_{ij}(w_i - v_i)(w_j - v_j)$ couples neighboring nodes: every step is a QP. Clipping is the \emph{Euclidean} projection.
   \end{hlbox}
   }
 
@@ -163,7 +155,7 @@
 % ------------------------------------------------------------
 \begin{frame}{Mass Lumping in Practice}
   \begin{hlbox}
-    \textbf{Lumped mass matrix} $M_L := \mathrm{diag}(M\mathbf{1})$, $(M_L)_{ii} = \int_D \varphi_i \dd x$. Use $M_L$ for the geometry of the control space: the Riesz map $g = M_L^{-1}r$, the projection norm, and the Tikhonov term $\tfrac{\alpha}{2} z^\top M_L z$. Keep $M$ where $z$ enters the state equation as a load, $Mz$.
+    \textbf{Lumped mass matrix} $M_L := \mathrm{diag}(M\mathbf{1})$. Use $M_L$ for the control geometry (Riesz map $M_L^{-1}r$, projection norm, Tikhonov term); keep $M$ for the load $Mz$ in the state equation.
   \end{hlbox}
 
   \visible<2->{
@@ -188,7 +180,7 @@
 % ------------------------------------------------------------
 \begin{frame}{Mesh Independent? A Contraction Estimate}
   \begin{qbox}
-    \textbf{Theorem} (model problem, $\alpha > 0$). Let $H := \Lambda^{-1}\hat J'' = \Lambda^{-1}(CS)^*\Lambda(CS) + \alpha I \in \mathcal{L}(L^2)$ be the Hessian and $L := \alpha + \norm{CS}_{\mathcal{L}(L^2)}^2$, the Lipschitz constant of $\nabla\hat J$. For a fixed step $s \in (0, 2/L)$, the projected gradient iterates satisfy
+    \textbf{Theorem} (model problem, $\alpha > 0$). Let $H := \Lambda^{-1}\hat J''$ be the Hessian and $L := \alpha + \norm{CS}_{\mathcal{L}(L^2)}^2$. For a fixed step $s \in (0, 2/L)$, the projected gradient iterates satisfy
     \[
       \norm{z_{k+1} - \bar z}_{L^2} \le q\,\norm{z_k - \bar z}_{L^2}, \qquad q := \max\{|1 - s\alpha|,\, |1 - sL|\} < 1 .
     \]
@@ -269,13 +261,12 @@
   \visible<2->{
   \begin{hlbox}
     Hence the discrete Hessian $H_h = M^{-1}S_h^\top M S_h + \alpha I$ has $\sigma(H_h) \subset [\alpha,\, \alpha + c_F^4]$ for every mesh, and $q_h$ is bounded uniformly in $h$.
-    Moreover, the eigenvalues of $H_h$ converge to those of $H$ as $h \to 0$.
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{qbox}
-    The discrete iteration converges like the infinite-dimensional one: \textbf{mesh independence}.
+    One step size and one rate bound $q$ for \emph{every} mesh: \textbf{mesh independence}.
     With Euclidean gradients, the Hessian is $M H_h$ and picks up $\mathrm{cond}(M)$: \textbf{formulate in $Z$, then discretize}.
   \end{qbox}
   }

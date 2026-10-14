@@ -26,32 +26,7 @@
     Hence $q_h \le \max\{|1 - s\alpha|, |1 - s(\alpha + c_F^4)|\}$ for \emph{all} meshes.
   \end{qbox}
   }
-  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 7}}
-\end{frame}
-
-\begin{frame}{Spectral Convergence}
-  \begin{hlbox}
-    \textbf{Even more is true} (controls not discretized). For convex polygonal $D$, Aubin--Nitsche gives $\norm{C(S - S_h)}_{\mathcal{L}(L^2)} \le c\,h^2$, hence
-    \(
-      \norm{H - H_h}_{\mathcal{L}(L^2)} \le C' h^2 .
-    \)
-  \end{hlbox}
-
-  \visible<2->{
-  \begin{hlbox}
-    \textbf{Weyl's inequality.} $H - \alpha I$ and $H_h - \alpha I$ are compact, self-adjoint, nonnegative; with eigenvalues in decreasing order, $|\lambda_k(T) - \lambda_k(T_h)| \le \norm{T - T_h}_{\mathcal{L}(L^2)}$. So
-    \[
-      |\lambda_k(H) - \lambda_k(H_h)| \le C' h^2 \qquad \text{for every } k .
-    \]
-  \end{hlbox}
-  }
-
-  \visible<3->{
-  \begin{qbox}
-    The discrete Hessians have asymptotically the \emph{same spectrum} as $H$; with discretized controls, the control approximation error enters as well.
-  \end{qbox}
-  }
-  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 7}}
+  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 6}}
 \end{frame}
 
 \begin{frame}[label=euclidapp]{Euclidean Hessian: The Derivation}
@@ -65,7 +40,7 @@
   \begin{hlbox}
     Hence $\mathrm{cond}(H_E) \le (1 + c_F^4/\alpha)\,\mathrm{cond}(M)$. On quasi-uniform meshes $\mathrm{cond}(M)$ is bounded (only the $h^d$ scaling hurts); on graded meshes $\mathrm{cond}(M) \sim (h_{\max}/h_{\min})^d$. The factor is attained asymptotically: for oscillatory $x$, $\norm{CS_h x}_{L^2}^2 \ll \alpha\, x^\top M x$, so $H_E \approx \alpha M$ there.
   \end{hlbox}
-  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 7}}
+  \vfill\hfill\hyperlink{disch<3>}{\beamerreturnbutton{Back to Section 6}}
 \end{frame}
 
 \end{document}
