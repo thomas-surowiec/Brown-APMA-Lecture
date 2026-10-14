@@ -80,19 +80,18 @@
 % ------------------------------------------------------------
 \begin{frame}{Matrix-Free Realization and Convergence}
   \begin{hlbox}
-    On $\mathcal{A}_k$: $d_k = g_k$. \; On $\mathcal{I}_k$: solve $\chi_{\mathcal{I}_k} H \chi_{\mathcal{I}_k} d = \chi_{\mathcal{I}_k} g_k$ by \textbf{CG in the $L^2$ ($M$-) inner product}. Each CG step needs one product $H(\chi_{\mathcal{I}_k} v)$: a linearized state solve and a second adjoint solve (Section 5). The Hessian is never formed.
+    On $\mathcal{A}_k$: $d_k = g_k$. On $\mathcal{I}_k$: \textbf{CG in the $L^2$ ($M$-) inner product}; each step costs one product $Hv$, i.e.\ two linear PDE solves (Section 5).
   \end{hlbox}
 
   \visible<2->{
   \begin{hlbox}
-    \textbf{Spectrum again.} $\chi_{\mathcal{I}_k} H \chi_{\mathcal{I}_k} = \alpha I + \text{compact}$ on $L^2(\mathcal{I}_k)$, with quadratic form in $[\alpha, L]$: CG counts are bounded independently of $h$.
-    \textbf{Inexact Newton:} stop CG at $\norm{\rho_k}_{L^2} \le \eta_k \norm{g_k}_{L^2}$, $\eta_k \to 0$ (Dembo--Eisenstat--Steihaug 1982); nonconvex: stop at negative curvature (Steihaug 1983).
+    \textbf{Spectrum again:} on $L^2(\mathcal{I}_k)$ the quadratic form of $\chi_{\mathcal{I}_k} H \chi_{\mathcal{I}_k}$ lies in $[\alpha, L]$, so CG counts are bounded in $h$. \textbf{Inexact:} stop CG at relative residual $\eta_k \to 0$ (Dembo--Eisenstat--Steihaug 1982).
   \end{hlbox}
   }
 
   \visible<3->{
   \begin{qbox}
-    \textbf{Convergence:} global via Armijo along the arc; superlinear once the active set settles (Bertsekas 1982; Kelley 1999); mesh independent via the spectral bounds. \textbf{Relative:} primal--dual active sets $=$ semismooth Newton (Hinterm\"uller--Ito--Kunisch 2002; Hinterm\"uller--Ulbrich 2004).
+    \textbf{Convergence:} global (Armijo along the arc), superlinear once the active set settles (Bertsekas 1982), mesh independent. \textbf{Relative:} primal--dual active sets $=$ semismooth Newton (Hinterm\"uller--Ito--Kunisch 2002).
   \end{qbox}
   }
 \end{frame}
